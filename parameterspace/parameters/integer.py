@@ -3,16 +3,16 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from typing import Tuple, Union, Optional
+from typing import Optional, Tuple, Union
 
 import numpy as np
 
+from parameterspace.parameters.base import BaseParameter
 from parameterspace.priors.base import BasePrior
 from parameterspace.priors.uniform import Uniform
-from parameterspace.transformations.zero_one import ZeroOneInteger
-from parameterspace.transformations.log_zero_one import LogZeroOneInteger
 from parameterspace.transformations.base import BaseTransformation
-from parameterspace.parameters.base import BaseParameter
+from parameterspace.transformations.log_zero_one import LogZeroOneInteger
+from parameterspace.transformations.zero_one import ZeroOneInteger
 from parameterspace.utils import store_init_arguments
 
 
@@ -53,7 +53,13 @@ class IntegerParameter(BaseParameter):
 
         # TODO: Ask Stefan: inactive_numerical_value is unused/not passed
         super().__init__(
-            name, prior, transformation, is_continuous=False, is_ordered=True, num_values=bounds[1] - bounds[0] + 1, inactive_numerical_value=np.nan
+            name,
+            prior,
+            transformation,
+            is_continuous=False,
+            is_ordered=True,
+            num_values=bounds[1] - bounds[0] + 1,
+            inactive_numerical_value=np.nan,
         )
 
     def __repr__(self):
@@ -67,5 +73,5 @@ class IntegerParameter(BaseParameter):
         return self.bounds[0] <= value <= self.bounds[1] and value == int(value)
 
     def num2val(self, numerical_value):
-        """ Translate the numerical representation into the actual value."""
+        """Translate the numerical representation into the actual value."""
         return int(super().num2val(numerical_value))

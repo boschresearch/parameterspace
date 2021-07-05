@@ -6,20 +6,18 @@
 import json
 
 import numpy as np
-import scipy.stats as sps
 import pytest
+import scipy.stats as sps
 
 from parameterspace.parameters.base import BaseParameter
-from parameterspace.parameters.integer import IntegerParameter
-from parameterspace.parameters.continuous import ContinuousParameter
 from parameterspace.parameters.categorical import CategoricalParameter
+from parameterspace.parameters.continuous import ContinuousParameter
+from parameterspace.parameters.integer import IntegerParameter
 from parameterspace.priors.uniform import Uniform
-from parameterspace.transformations.zero_one import ZeroOneFloat, ZeroOneInteger
 from parameterspace.transformations.log_zero_one import LogZeroOneFloat
-from parameterspace.parameters.base import BaseParameter
+from parameterspace.transformations.zero_one import ZeroOneFloat, ZeroOneInteger
 
-
-from .util import check_value_numvalue_conversion, check_sampling, check_values
+from .util import check_sampling, check_value_numvalue_conversion, check_values
 
 
 @pytest.mark.flaky(max_runs=4)
@@ -31,11 +29,19 @@ def test_continuous_parameter(num_samples=2 ** 14):
     assert p.is_ordered
 
     check_values(p, [-5, 2, 2.1, 5], [True, True, True, False])
-    check_value_numvalue_conversion(p, [(f, (f - bounds[0]) / (bounds[1] - bounds[0])) for f in np.linspace(bounds[0], bounds[1], 128)])
+    check_value_numvalue_conversion(
+        p,
+        [
+            (f, (f - bounds[0]) / (bounds[1] - bounds[0]))
+            for f in np.linspace(bounds[0], bounds[1], 128)
+        ],
+    )
     check_sampling(p)
 
     samples = p.sample_values(num_samples=num_samples)
-    stat, p_value = sps.kstest(samples, sps.uniform(loc=bounds[0], scale=(bounds[1] - bounds[0])).cdf)
+    stat, p_value = sps.kstest(
+        samples, sps.uniform(loc=bounds[0], scale=(bounds[1] - bounds[0])).cdf
+    )
     # KS statistic should be less than this value for confidence alpha=0.05
     # reference: https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test
     assert stat * np.sqrt(num_samples) < 1.36

@@ -5,18 +5,16 @@
 
 import itertools
 import json
-import dill
 
+import dill
 import numpy as np
+import pytest
 from scipy.stats import norm, truncnorm
 
-import pytest
-
 import parameterspace as ps
-from parameterspace.priors.truncated_normal import TruncatedNormal
-from parameterspace.parameters.integer import IntegerParameter
-from parameterspace.parameters.continuous import ContinuousParameter
 from parameterspace.parameters.categorical import CategoricalParameter
+from parameterspace.parameters.continuous import ContinuousParameter
+from parameterspace.parameters.integer import IntegerParameter
 from parameterspace.parameters.ordinal import OrdinalParameter
 from parameterspace.parameterspace import ParameterSpace
 from parameterspace.priors.truncated_normal import TruncatedNormal
@@ -55,7 +53,9 @@ def test_simple_space():
 
 def test_seeded_parameterspace():
     p1 = IntegerParameter("p1", (-5, 5))
-    p2 = ContinuousParameter("p2", (1e-3, 1e3), prior=TruncatedNormal(0.5, 1), transformation="log")
+    p2 = ContinuousParameter(
+        "p2", (1e-3, 1e3), prior=TruncatedNormal(0.5, 1), transformation="log"
+    )
     p3 = CategoricalParameter("p3", ["foo", "bar"])
     p4 = OrdinalParameter("p4", ["cold", "warm", "hot"])
 
@@ -86,7 +86,9 @@ def test_seeded_parameterspace():
     space2_reloaded = ParameterSpace.from_dict(space2.to_dict())
     reloaded_next = space2_reloaded.sample()
     original_next = space2.sample()
-    assert reloaded_next == original_next, "To and from dictionary serialization should not interfere with the seeding."
+    assert (
+        reloaded_next == original_next
+    ), "To and from dictionary serialization should not interfere with the seeding."
 
 
 def test_remove_parameter_no_conditions():
@@ -289,7 +291,9 @@ def test_loglikelihood_1d():
     ref = [({"p1": i}, norm.logpdf(i)) for i in range(-5, 6)]
 
     for c, ref_val in ref:
-        assert np.allclose(s1.log_likelihood(c) - ref_ll, ref_val - ref_ll_sps, atol=1e-6)
+        assert np.allclose(
+            s1.log_likelihood(c) - ref_ll, ref_val - ref_ll_sps, atol=1e-6
+        )
 
 
 def test_loglikelihood_2d_no_condition():
@@ -311,7 +315,9 @@ def test_loglikelihood_2d_no_condition():
     ]
 
     for c, ref_val in ref:
-        assert np.allclose(s1.log_likelihood(c) - ref_ll, ref_val - ref_ll_sps, atol=1e-6)
+        assert np.allclose(
+            s1.log_likelihood(c) - ref_ll, ref_val - ref_ll_sps, atol=1e-6
+        )
 
 
 def test_loglikelihood_2d_with_condition():
@@ -358,9 +364,20 @@ def test_repr():
 def test_conditional_space(num_samples=128):
     optimizer = CategoricalParameter("optimizer", ["Adam", "SGD"])
 
-    lr_adam = ContinuousParameter("lr_adam", bounds=[1e-5, 1e-3], transformation=ps.transformations.LogZeroOneFloat([1e-5, 1e-3]))
-    lr_sgd = ContinuousParameter("lr_sgd", bounds=[1e-3, 1e-0], transformation="log", prior=ps.priors.TruncatedNormal(mean=0.5, std=0.2))
-    momentum_sgd = ContinuousParameter("momentum", bounds=[0, 0.9], inactive_numerical_value=-1)
+    lr_adam = ContinuousParameter(
+        "lr_adam",
+        bounds=[1e-5, 1e-3],
+        transformation=ps.transformations.LogZeroOneFloat([1e-5, 1e-3]),
+    )
+    lr_sgd = ContinuousParameter(
+        "lr_sgd",
+        bounds=[1e-3, 1e-0],
+        transformation="log",
+        prior=ps.priors.TruncatedNormal(mean=0.5, std=0.2),
+    )
+    momentum_sgd = ContinuousParameter(
+        "momentum", bounds=[0, 0.9], inactive_numerical_value=-1
+    )
 
     space = ParameterSpace()
     space.add(optimizer)
@@ -457,7 +474,9 @@ def test_from_dict_without_rng_state():
 
 def test_to_from_dict(num_samples=128):
     p1 = IntegerParameter("p1", (-5, 5))
-    p2 = ContinuousParameter("p2", (1e-3, 1e3), prior=TruncatedNormal(0.5, 1), transformation="log")
+    p2 = ContinuousParameter(
+        "p2", (1e-3, 1e3), prior=TruncatedNormal(0.5, 1), transformation="log"
+    )
     p3 = CategoricalParameter("p3", ["foo", "bar"])
     p4 = OrdinalParameter("p4", ["cold", "warm", "hot"])
 
@@ -484,8 +503,12 @@ def test_to_from_dict(num_samples=128):
 
         np.testing.assert_array_almost_equal(num1, num2)
         np.testing.assert_array_almost_equal(num1, num3)
-        np.testing.assert_array_almost_equal(space1.log_likelihood_numerical(num1), space2.log_likelihood_numerical(num2))
-        np.testing.assert_array_almost_equal(space1.log_likelihood_numerical(num1), space3.log_likelihood_numerical(num3))
+        np.testing.assert_array_almost_equal(
+            space1.log_likelihood_numerical(num1), space2.log_likelihood_numerical(num2)
+        )
+        np.testing.assert_array_almost_equal(
+            space1.log_likelihood_numerical(num1), space3.log_likelihood_numerical(num3)
+        )
 
         for k in sample.keys():
             assert sample[k] == s1[k] or all(np.isnan([sample[k], s1[k]]))
@@ -497,7 +520,9 @@ def test_to_from_dict(num_samples=128):
 
 def test_copy():
     p1 = IntegerParameter("p1", (-5, 5))
-    p2 = ContinuousParameter("p2", (1e-3, 1e3), prior=TruncatedNormal(0.5, 1), transformation="log")
+    p2 = ContinuousParameter(
+        "p2", (1e-3, 1e3), prior=TruncatedNormal(0.5, 1), transformation="log"
+    )
     p3 = CategoricalParameter("p3", ["foo", "bar"])
     p4 = OrdinalParameter("p4", ["cold", "warm", "hot"])
 
@@ -522,7 +547,9 @@ def test_copy():
 
 def test_dill(num_samples=128):
     p1 = IntegerParameter("p1", (-5, 5))
-    p2 = ContinuousParameter("p2", (1e-3, 1e3), prior=TruncatedNormal(0.5, 1), transformation="log")
+    p2 = ContinuousParameter(
+        "p2", (1e-3, 1e3), prior=TruncatedNormal(0.5, 1), transformation="log"
+    )
     p3 = CategoricalParameter("p3", ["foo", "bar"])
     p4 = OrdinalParameter("p4", ["cold", "warm", "hot"])
 
@@ -543,7 +570,9 @@ def test_dill(num_samples=128):
         s2 = space2.from_numerical(num2)
 
         np.testing.assert_array_almost_equal(num1, num2)
-        np.testing.assert_array_almost_equal(space1.log_likelihood_numerical(num1), space2.log_likelihood_numerical(num2))
+        np.testing.assert_array_almost_equal(
+            space1.log_likelihood_numerical(num1), space2.log_likelihood_numerical(num2)
+        )
 
         for k in sample.keys():
             assert sample[k] == s1[k] or all(np.isnan([sample[k], s1[k]]))

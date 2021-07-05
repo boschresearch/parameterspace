@@ -12,7 +12,6 @@ import pytest
 from parameterspace.priors.base import BasePrior
 from parameterspace.priors.categorical import Categorical
 
-
 PRIOR_PROBABILITIES = [1, 2, 1, 3, 5]
 
 
@@ -58,13 +57,21 @@ def test_categorical_prior_pdf_and_likelihood(num_samples=64):
     Z = np.sum(PRIOR_PROBABILITIES)
 
     for s in samples:
-        assert p.pdf(s) == PRIOR_PROBABILITIES[int(np.around(len(PRIOR_PROBABILITIES) * s - 0.5))] / Z
+        assert (
+            p.pdf(s)
+            == PRIOR_PROBABILITIES[int(np.around(len(PRIOR_PROBABILITIES) * s - 0.5))]
+            / Z
+        )
 
     for i, j in itertools.combinations(range(len(lls)), 2):
         ll_diff1 = lls[i] - lls[j]
         ll_diff2 = np.log(
-            PRIOR_PROBABILITIES[int(np.around(len(PRIOR_PROBABILITIES) * samples[i] - 0.5))]
-            / PRIOR_PROBABILITIES[int(np.around(len(PRIOR_PROBABILITIES) * samples[j] - 0.5))]
+            PRIOR_PROBABILITIES[
+                int(np.around(len(PRIOR_PROBABILITIES) * samples[i] - 0.5))
+            ]
+            / PRIOR_PROBABILITIES[
+                int(np.around(len(PRIOR_PROBABILITIES) * samples[j] - 0.5))
+            ]
         )
         assert np.allclose(ll_diff1, ll_diff2, 1e-6)
 

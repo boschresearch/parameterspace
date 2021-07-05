@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from typing import Optional, Tuple, Any
+from typing import Any, Optional, Tuple
 
 import numpy as np
 
@@ -34,7 +34,13 @@ class LogZeroOneFloat(BaseTransformation):
         self.log_interval_size = self.log_bounds[1] - self.log_bounds[0]
 
     def inverse(self, numerical_value: float) -> float:
-        return float(np.clip(np.exp(self.log_bounds[0] + numerical_value * (self.log_interval_size)), self.input_bounds[0], self.input_bounds[1]))
+        return float(
+            np.clip(
+                np.exp(self.log_bounds[0] + numerical_value * (self.log_interval_size)),
+                self.input_bounds[0],
+                self.input_bounds[1],
+            )
+        )
 
     def __call__(self, value: Any) -> float:
         return float((np.log(value) - self.log_bounds[0]) / self.log_interval_size)
@@ -72,7 +78,11 @@ class LogZeroOneInteger(BaseTransformation):
         """
         [summary]
         """
-        return int(np.around(np.exp(self.log_bounds[0] + numerical_value * (self.log_interval_size))))
+        return int(
+            np.around(
+                np.exp(self.log_bounds[0] + numerical_value * (self.log_interval_size))
+            )
+        )
 
     def __call__(self, value: Any) -> float:
         return float((np.log(value) - self.log_bounds[0]) / self.log_interval_size)

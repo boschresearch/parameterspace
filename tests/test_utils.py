@@ -32,8 +32,12 @@ def test_extract_lambda_information():
     expected_variables.append(["p1", "p2"])
     expected_bodies.append("math.sin(p1 + p2)")
 
-    for lambda_fn, expected_vars, expected_body in zip(functions, expected_variables, expected_bodies):
-        variables, body = utils.extract_lambda_information(inspect.getsourcelines(lambda_fn)[0])
+    for lambda_fn, expected_vars, expected_body in zip(
+        functions, expected_variables, expected_bodies
+    ):
+        variables, body = utils.extract_lambda_information(
+            inspect.getsourcelines(lambda_fn)[0]
+        )
 
         assert variables == expected_vars
         assert body == expected_body
@@ -89,7 +93,9 @@ def test_verify_lambda():
     expected_to_pass.append(False)
 
     for lambda_fn, pass_expected in zip(functions, expected_to_pass):
-        variables, body = utils.extract_lambda_information(inspect.getsourcelines(lambda_fn)[0])
+        variables, body = utils.extract_lambda_information(
+            inspect.getsourcelines(lambda_fn)[0]
+        )
         assert pass_expected == utils.verify_lambda(variables, body)
 
 

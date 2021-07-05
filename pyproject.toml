@@ -57,13 +57,13 @@ no_strict_optional = true
 exclude = 'site/generate_references.py'
 
 [tool.black]
-line-length = 160
+line-length = 88
 
 [tool.isort]
 profile = "black"
 
 [tool.pylint.format]
-max-line-length = 160
+max-line-length = 88
 
 [tool.pylint.messages_control]
 extension-pkg-whitelist = "pydantic" # pydantic has issues with pylint

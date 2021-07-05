@@ -50,12 +50,18 @@ def extract_lambda_information(source_lines: Iterable) -> Tuple[list, str]:
         [description]
     """
     condensed_code = "".join(source_lines).replace(os.linesep, "")  # join lines
-    condensed_code = " ".join(condensed_code.split())  # replace multiple spaces by a single one
+    condensed_code = " ".join(
+        condensed_code.split()
+    )  # replace multiple spaces by a single one
 
     try:
         signature, body = condensed_code.split("lambda")[1].split(":")
     except IndexError:
-        raise RuntimeError("The function definition \n{}\ndoes not look like a valid Lambda function!".format("".join(source_lines)))
+        raise RuntimeError(
+            "The function definition \n{}\ndoes not look like a valid Lambda function!".format(
+                "".join(source_lines)
+            )
+        )
 
     while len(body) > 1:
         lambda_def = f"lambda {signature}: {body}"
@@ -94,7 +100,15 @@ def verify_lambda(variables: list, body: str) -> bool:
             return False
 
     white_listed_chars = ".0123456789+-*/()<=!> "
-    white_listed_functions = ["math.sin", "math.cos", "math.exp", "math.log", "or", "and", "not"]
+    white_listed_functions = [
+        "math.sin",
+        "math.cos",
+        "math.exp",
+        "math.log",
+        "or",
+        "and",
+        "not",
+    ]
 
     for vn in variables:
         body = body.replace(vn, "")

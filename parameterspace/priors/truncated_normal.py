@@ -37,7 +37,12 @@ class TruncatedNormal(BasePrior):
         return self.sps_dist.rvs(size=num_samples, random_state=random_state)
 
     def __repr__(self):
-        return "Truncated normal (Interval [%f, %f]) with parameteres mean=%f, std=%f" % (self.bounds[0], self.bounds[1], self.mean, self.std)
+        return (
+            "Truncated normal (Interval [%f, %f]) with parameteres mean=%f, std=%f"
+            % (self.bounds[0], self.bounds[1], self.mean, self.std)
+        )
 
     def __eq__(self, other):
-        return super().__eq__(other) and np.allclose([self.mean, self.std], [other.mean, other.std])
+        return super().__eq__(other) and np.allclose(
+            [self.mean, self.std], [other.mean, other.std]
+        )

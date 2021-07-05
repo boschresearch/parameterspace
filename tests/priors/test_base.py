@@ -6,6 +6,7 @@
 import itertools
 
 import numpy as np
+
 from parameterspace.priors import Beta, Categorical, TruncatedNormal, Uniform
 
 

@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 from __future__ import annotations
+
 import inspect
 from typing import Callable
 
@@ -28,7 +29,9 @@ class Condition:
 
         if lambda_fn is not None:
             self.functions = [lambda_fn]
-            varnames, function_text = utils.extract_lambda_information(inspect.getsourcelines(lambda_fn)[0])
+            varnames, function_text = utils.extract_lambda_information(
+                inspect.getsourcelines(lambda_fn)[0]
+            )
             # self.varnames = [lambda_fn.__code__.co_varnames]
             self.varnames = [varnames]
             self.function_texts = [function_text]
@@ -37,7 +40,9 @@ class Condition:
     def __repr__(self):
         if not self.all_varnames:
             return "No conditions!"
-        string = "Condition(s) depend(s) on {}.\n".format(self.all_varnames) + "\n".join(self.function_texts)
+        string = "Condition(s) depend(s) on {}.\n".format(
+            self.all_varnames
+        ) + "\n".join(self.function_texts)
         return string
 
     def __call__(self, config=None):
@@ -85,12 +90,16 @@ class Condition:
             [description]
         """
         return_dict = {}
-        for i, (varnames, function_text) in enumerate(zip(self.varnames, self.function_texts)):
+        for i, (varnames, function_text) in enumerate(
+            zip(self.varnames, self.function_texts)
+        ):
             return_dict[str(i)] = {"varnames": varnames, "function_text": function_text}
         return return_dict
 
     @staticmethod
-    def from_dict(dict_representation: dict, verify_lambda: Callable = utils.verify_lambda) -> Condition:
+    def from_dict(
+        dict_representation: dict, verify_lambda: Callable = utils.verify_lambda
+    ) -> Condition:
         """[summary]
 
         Args:
@@ -118,7 +127,9 @@ class Condition:
             return_condition.varnames.append(varnames)
             return_condition.all_varnames |= set(varnames)
 
-            return_condition.functions.append(eval("lambda {}: {}".format(", ".join(varnames), function_text)))
+            return_condition.functions.append(
+                eval("lambda {}: {}".format(", ".join(varnames), function_text))
+            )
 
         return return_condition
 

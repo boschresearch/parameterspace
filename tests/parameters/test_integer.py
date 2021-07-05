@@ -9,13 +9,13 @@ import numpy as np
 import pytest
 import scipy.stats as sps
 
-from parameterspace.parameters.integer import IntegerParameter
 from parameterspace.parameters.base import BaseParameter
-from parameterspace.transformations.zero_one import ZeroOneInteger
-from parameterspace.transformations.log_zero_one import LogZeroOneInteger
+from parameterspace.parameters.integer import IntegerParameter
 from parameterspace.priors.uniform import Uniform
+from parameterspace.transformations.log_zero_one import LogZeroOneInteger
+from parameterspace.transformations.zero_one import ZeroOneInteger
 
-from .util import check_value_numvalue_conversion, check_sampling, check_values
+from .util import check_sampling, check_value_numvalue_conversion, check_values
 
 
 def test_integer_parameter():
@@ -26,7 +26,9 @@ def test_integer_parameter():
     assert p.is_ordered
 
     check_values(p, [-5, 2, 2.1, 5], [False, True, False, True])
-    check_value_numvalue_conversion(p, [(i + bounds[0], (i + 0.5) / (bounds[1] - bounds[0] + 1)) for i in range(13)])
+    check_value_numvalue_conversion(
+        p, [(i + bounds[0], (i + 0.5) / (bounds[1] - bounds[0] + 1)) for i in range(13)]
+    )
     check_sampling(p)
 
     # test string representation
@@ -46,12 +48,22 @@ def test_integer_log_transform(num_samples=2 ** 14):
     check_sampling(p)
 
     samples = p.sample_values(num_samples=num_samples)
-    stat, p_value = sps.kstest(np.log(samples), sps.uniform(loc=np.log(bounds[0]), scale=np.log(bounds[1]) - np.log(bounds[0])).cdf)
+    stat, p_value = sps.kstest(
+        np.log(samples),
+        sps.uniform(
+            loc=np.log(bounds[0]), scale=np.log(bounds[1]) - np.log(bounds[0])
+        ).cdf,
+    )
 
     # uniform distribution in log space is equivalent to the reciprocal distribution
     # reference: https://en.wikipedia.org/wiki/Reciprocal_distribution
     sps_dist = sps.reciprocal(bounds[0] - 0.5, bounds[1] + 0.5)
-    expected_frequencies = len(samples) * np.array([(sps_dist.cdf(i + 0.5) - sps_dist.cdf(i - 0.5)) for i in np.arange(bounds[0], bounds[1] + 1)])
+    expected_frequencies = len(samples) * np.array(
+        [
+            (sps_dist.cdf(i + 0.5) - sps_dist.cdf(i - 0.5))
+            for i in np.arange(bounds[0], bounds[1] + 1)
+        ]
+    )
     res = sps.chisquare(np.bincount(samples)[1:], expected_frequencies)
     chi2 = sps.chi2(bounds[1] - bounds[0])
     assert chi2.cdf(res.statistic) < 0.95

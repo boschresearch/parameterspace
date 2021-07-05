@@ -5,13 +5,13 @@
 
 import abc
 import importlib
-from typing import Optional, Tuple, Any
+from typing import Any, Optional, Tuple
 
 import numpy as np
 
 
 class BaseTransformation(abc.ABC):
-    """ Base class defining the API of a transformation."""
+    """Base class defining the API of a transformation."""
 
     def __init__(self, input_bounds: Optional[Tuple], output_bounds: Tuple):
         """

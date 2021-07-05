@@ -9,7 +9,6 @@ import numpy as np
 
 from parameterspace.priors.normal import Normal
 
-
 mean, std = 1, 5
 
 

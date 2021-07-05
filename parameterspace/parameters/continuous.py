@@ -2,18 +2,17 @@
 # see the NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
 #
 # SPDX-License-Identifier: Apache-2.0
-from typing import Tuple, Union, Optional
+from typing import Optional, Tuple, Union
 
 import numpy as np
 
-from parameterspace.priors.uniform import Uniform
-from parameterspace.priors.base import BasePrior
-
-from parameterspace.transformations.zero_one import ZeroOneFloat
-from parameterspace.transformations.log_zero_one import LogZeroOneFloat
 from parameterspace.parameters.base import BaseParameter
-from parameterspace.utils import store_init_arguments
+from parameterspace.priors.base import BasePrior
+from parameterspace.priors.uniform import Uniform
 from parameterspace.transformations.base import BaseTransformation
+from parameterspace.transformations.log_zero_one import LogZeroOneFloat
+from parameterspace.transformations.zero_one import ZeroOneFloat
+from parameterspace.utils import store_init_arguments
 
 
 class ContinuousParameter(BaseParameter):
@@ -51,7 +50,15 @@ class ContinuousParameter(BaseParameter):
                 transformation = LogZeroOneFloat(self.bounds)
 
         prior = Uniform() if prior is None else prior
-        super().__init__(name, prior, transformation, is_continuous=True, is_ordered=True, num_values=np.inf, inactive_numerical_value=inactive_numerical_value)
+        super().__init__(
+            name,
+            prior,
+            transformation,
+            is_continuous=True,
+            is_ordered=True,
+            num_values=np.inf,
+            inactive_numerical_value=inactive_numerical_value,
+        )
 
     def __repr__(self):
         """Add bounds to the string representation."""
