@@ -1,0 +1,72 @@
+site_name: ParameterSpace
+
+# For theming options visit
+# https://squidfunk.github.io/mkdocs-material/setup/changing-the-colors/
+theme:
+  name: material
+  palette:
+    primary: black
+    accent: light blue
+
+nav:
+  - index.md
+  - Examples:
+      - Parameter types: notebooks/example_1.ipynb
+      - Simple parameter space: notebooks/example_2_simple_parameterspace.ipynb
+      - Conditional parameter space: notebooks/example_3_conditional_spaces.ipynb
+  - Code References:
+      - parameterspace: parameterspace/parameterspace.md
+      - parameters:
+          - base: parameterspace/parameters/base.md
+          - categorical: parameterspace/parameters/categorical.md
+          - continuous: parameterspace/parameters/continuous.md
+          - integer: parameterspace/parameters/integer.md
+          - ordinal: parameterspace/parameters/ordinal.md
+      - priors:
+          - base: parameterspace/priors/base.md
+          - beta: parameterspace/priors/beta.md
+          - categorical: parameterspace/priors/categorical.md
+          - normal: parameterspace/priors/normal.md
+          - truncated_normal: parameterspace/priors/truncated_normal.md
+          - uniform: parameterspace/priors/uniform.md
+      - transformations:
+          - base: parameterspace/transformations/base.md
+          - categorical: parameterspace/transformations/categorical.md
+          - log_zero_one: parameterspace/transformations/log_zero_one.md
+          - zero_one: parameterspace/transformations/zero_one.md
+      - condition: parameterspace/condition.md
+      - utils: parameterspace/utils.md
+
+plugins:
+  - search
+  - mkdocs-jupyter
+  - mkdocstrings:
+      watch:
+        - parameterspace
+      handlers:
+        python:
+          rendering:
+            show_root_heading: true
+            show_root_full_path: true
+            show_object_full_path: false
+            show_root_toc_entry: true
+            show_root_members_full_path: false
+            show_category_heading: false
+            show_if_no_docstring: false
+            show_source: true
+            group_by_category: false
+            heading_level: 1
+            show_signature_annotations: false
+
+markdown_extensions:
+  - pymdownx.highlight
+  - pymdownx.superfences
+  - pymdownx.snippets
+  - admonition
+  - pymdownx.arithmatex:
+      generic: true
+
+extra_javascript:
+  - javascripts/config.js
+  - https://polyfill.io/v3/polyfill.min.js?features=es6
+  - https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js
