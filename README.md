@@ -1,11 +1,11 @@
 # ParameterSpace
 
 * [About](#about)
-* [How to use it](#use)
+* [Installation](#installation)
 * [How to build and test it](#build)
 * [License](#license)
 
-## <a name="about">About</a>
+## About
 
 A package to define parameter spaces consisting of mixed types (continuous, integers,
 catergoricals) with conditionalities and priors.
@@ -33,53 +33,58 @@ Before using it in a safety relevant setting, make sure that the software fulfil
 requirements and adjust it according to any applicable safety standards
 (e.g. ISO 26262).
 
-## <a name="use">How to use it</a>
+## Installation
 
-The parameterspace package can be installed with the Python package manager:
+The `parameterspace` package can be installed from pypi.org:
 
 ```
 pip install parameterspace
 ```
 
+## Development
 
-## <a name="build">How to build and test it</a>
+### Prerequisites
 
+- Python 3+
+- [Poetry](https://python-poetry.org/docs/#installation)
 
-### Getting Started
+### Setup environment
 
 To install the package and its dependencies for development run:
+
 ```
-pip install -e .[dev]
+poetry install
 ```
 
+Optionally install [pre-commit](https://pre-commit.com) hooks to check code standards
+before committing changes:
+
+```
+poetry run pre-commit install
+```
 
 ### Running Tests
 
 The tests are located in the `./tests` folder.
 The [Pytest](https://pytest.org) framework is used for running them.
 To run the tests:
-```
-pip install -e .[dev,test]
-pytest ./tests
-```
 
+```
+poetry run pytest ./tests
+```
 
 ### Building Documentation
 
-To build the documentation, one needs to install
-parameterspace with doc dependencies:
-```
-pip install -e .[dev,doc]
-```
+To built documentation run from the repository root:
 
-To built documentiation run from the repository root:
 ```
-mkdocs build --clean
+poetry run mkdocs build --clean
 ```
 
 For serving it locally while working on the documentation run:
+
 ```
-mkdocs serve
+poetry run mkdocs serve
 ```
 
 ## License
