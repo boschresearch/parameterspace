@@ -8,10 +8,13 @@ import json
 import numpy as np
 import pytest
 
-from parameterspace.transformations.log_zero_one import LogZeroOneFloat, LogZeroOneInteger
 from parameterspace.transformations.base import BaseTransformation
+from parameterspace.transformations.log_zero_one import (
+    LogZeroOneFloat,
+    LogZeroOneInteger,
+)
 
-from .util import check_transform_and_inverse, check_bounds
+from .util import check_bounds, check_transform_and_inverse
 
 
 def test_log_zero_one_integer_transformation():
@@ -19,7 +22,9 @@ def test_log_zero_one_integer_transformation():
     t = LogZeroOneInteger(bounds)
     ref_values = [2 ** i for i in range(11)]
 
-    ref_values_transformed = (np.log(ref_values) - np.log(bounds[0] - 0.5)) / (np.log(bounds[1] + 0.5) - np.log(bounds[0] - 0.5))
+    ref_values_transformed = (np.log(ref_values) - np.log(bounds[0] - 0.5)) / (
+        np.log(bounds[1] + 0.5) - np.log(bounds[0] - 0.5)
+    )
 
     check_transform_and_inverse(t, zip(ref_values, ref_values_transformed))
     check_bounds(t, bounds, [0, 1])
@@ -29,7 +34,9 @@ def test_log_zero_one_integer_to_from_dict():
     bounds = (1, 1024)
     t1 = LogZeroOneInteger(bounds)
     ref_values = [2 ** i for i in range(11)]
-    ref_values_transformed = (np.log(ref_values) - np.log(bounds[0] - 0.5)) / (np.log(bounds[1] + 0.5) - np.log(bounds[0] - 0.5))
+    ref_values_transformed = (np.log(ref_values) - np.log(bounds[0] - 0.5)) / (
+        np.log(bounds[1] + 0.5) - np.log(bounds[0] - 0.5)
+    )
 
     json_dict = t1.to_dict()
     json.dumps(json_dict)

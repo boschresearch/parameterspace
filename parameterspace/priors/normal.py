@@ -10,7 +10,7 @@ from parameterspace.priors.base import BasePrior
 
 
 class Normal(BasePrior):
-    """ Stardand Gaussian prior. """
+    """Stardand Gaussian prior."""
 
     def __init__(self, mean=0, std=1):
         super().__init__(np.array([-np.inf, np.inf]))
@@ -26,4 +26,6 @@ class Normal(BasePrior):
         return self.sps_normal_dist.rvs(size=num_samples, random_state=random_state)
 
     def __eq__(self, other):
-        return super().__eq__(other) and np.allclose([self.mean, self.std], [other.mean, other.std])
+        return super().__eq__(other) and np.allclose(
+            [self.mean, self.std], [other.mean, other.std]
+        )

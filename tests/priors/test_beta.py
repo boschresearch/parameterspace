@@ -13,7 +13,6 @@ import scipy.special as sps
 from parameterspace.priors.base import BasePrior
 from parameterspace.priors.beta import Beta
 
-
 a, b = 2, 4
 
 

@@ -8,7 +8,7 @@ from __future__ import annotations
 
 import copy
 import warnings
-from typing import Union, Callable, Any, List, Tuple, Optional
+from typing import Any, Callable, List, Optional, Tuple, Union
 
 import numpy as np
 
@@ -70,7 +70,11 @@ class ParameterSpace(SearchSpace):
     def copy(self) -> ParameterSpace:
         return ParameterSpace.from_dict(self.to_dict())
 
-    def add(self, parameter: Union[BaseParameter, ParameterSpace], condition: Callable = None):
+    def add(
+        self,
+        parameter: Union[BaseParameter, ParameterSpace],
+        condition: Callable = None,
+    ):
         """Add a parameter that is only active if condition returns true when called.
 
         Args:
@@ -177,7 +181,9 @@ class ParameterSpace(SearchSpace):
 
         for name, value in kwargs.items():
             if name not in self._parameters:
-                raise ValueError(f"Parameter '{name}' is not part of this ParameterSpace!")
+                raise ValueError(
+                    f"Parameter '{name}' is not part of this ParameterSpace!"
+                )
 
             if not self._parameters[name]["parameter"].check_value(value):
                 raise ValueError(f"Invalid value `{value}` for parameter '{name}'!")
@@ -228,7 +234,9 @@ class ParameterSpace(SearchSpace):
         try:
             self._parameters.pop(name)
         except KeyError:
-            raise KeyError("Parameter '{}' is not part of the ParameteSpace.".format(name))
+            raise KeyError(
+                "Parameter '{}' is not part of the ParameteSpace.".format(name)
+            )
 
     def get_parameter_names(self) -> List[str]:
         """Get names of all parameters already in the current `ParameterSpace`.
@@ -238,7 +246,9 @@ class ParameterSpace(SearchSpace):
         """
         return list(self._parameters.keys())
 
-    def sample(self, partial_configuration: dict = None, rng: np.random.Generator = None) -> dict:
+    def sample(
+        self, partial_configuration: dict = None, rng: np.random.Generator = None
+    ) -> dict:
         """Sample a random configuration based on the priors.
 
         Args:
@@ -309,7 +319,9 @@ class ParameterSpace(SearchSpace):
         ll = 0.0
         for i, p in enumerate(self._parameters.values()):
             if np.isfinite(vector_configuration[i]):
-                ll += p["parameter"].loglikelihood_numerical_value(vector_configuration[i])
+                ll += p["parameter"].loglikelihood_numerical_value(
+                    vector_configuration[i]
+                )
         return ll
 
     def check_validity(self, configuration: dict) -> bool:
@@ -328,14 +340,26 @@ class ParameterSpace(SearchSpace):
             v = configuration.get(n, None)
             if v is None:
                 if p["condition"](configuration):
-                    warnings.warn("Parameter %s should be active, but does not have a value assigned.\n%s" % (n, configuration), RuntimeWarning)
+                    warnings.warn(
+                        "Parameter %s should be active, but does not have a value assigned.\n%s"
+                        % (n, configuration),
+                        RuntimeWarning,
+                    )
                     return False
             else:
                 if not p["condition"](configuration):
-                    warnings.warn("Parameter %s = %s should not be active!\nFull configuration: %s" % (n, v, configuration), RuntimeWarning)
+                    warnings.warn(
+                        "Parameter %s = %s should not be active!\nFull configuration: %s"
+                        % (n, v, configuration),
+                        RuntimeWarning,
+                    )
                     return False
                 if not p["parameter"].check_value(v):
-                    warnings.warn("Parameter %s = %s is not a valid assignment.\n Full configuration: %s" % (n, v, configuration), RuntimeWarning)
+                    warnings.warn(
+                        "Parameter %s = %s is not a valid assignment.\n Full configuration: %s"
+                        % (n, v, configuration),
+                        RuntimeWarning,
+                    )
                     return False
         return True
 
@@ -359,9 +383,13 @@ class ParameterSpace(SearchSpace):
 
         for name, value in self._constants.items():
             if name not in configuration:
-                raise ValueError(f"Configuration does not contain contant `{name} == {value}`!")
+                raise ValueError(
+                    f"Configuration does not contain contant `{name} == {value}`!"
+                )
             if configuration[name] != value:
-                raise ValueError(f"Constant parameter {name} has value {configuration[name]}, but should be {value}!")
+                raise ValueError(
+                    f"Constant parameter {name} has value {configuration[name]}, but should be {value}!"
+                )
 
         vec = np.zeros(len(self._parameters), dtype=float)
         for i, (n, p) in enumerate(self._parameters.items()):
@@ -441,7 +469,9 @@ class ParameterSpace(SearchSpace):
         for n in self.get_parameter_names():
             p = self[n]["parameter"]
             if not p.is_continuous:
-                raise ValueError("Parameterspace contains non-continuous parameter:\n{}".format(p))
+                raise ValueError(
+                    "Parameterspace contains non-continuous parameter:\n{}".format(p)
+                )
             bounds.append(list(p.get_numerical_bounds()))
         return bounds
 
@@ -457,8 +487,8 @@ class ParameterSpace(SearchSpace):
             LaTeX table represenation
         """
         try:
-            from num2tex import num2tex
             from num2tex import configure as num2tex_configure
+            from num2tex import num2tex
         except ImportError:
             raise RuntimeError("To use this functionality, please install num2tex.")
 
@@ -493,7 +523,10 @@ class ParameterSpace(SearchSpace):
 
                 if "Log" in transformation_name:
                     transformation_str = "Log"
-                    values_str = "$[{}, {}]$".format(num2tex(parameter.bounds[0], precision=2), num2tex(parameter.bounds[1], precision=2))
+                    values_str = "$[{}, {}]$".format(
+                        num2tex(parameter.bounds[0], precision=2),
+                        num2tex(parameter.bounds[1], precision=2),
+                    )
                 else:
                     transformation_str = " "
                     values_str = "$[{0[0]}, {0[1]}]$".format(parameter.bounds)
@@ -503,9 +536,18 @@ class ParameterSpace(SearchSpace):
                 values_str = "[" + ", ".join(parameter.values) + "]"
                 transformation_str = " "
                 prior_probs = parameter._prior.probabilities
-                prior_str = "[" + ",".join(map(lambda p: "{:3.2f}".format(p), prior_probs)) + "]"
+                prior_str = (
+                    "["
+                    + ",".join(map(lambda p: "{:3.2f}".format(p), prior_probs))
+                    + "]"
+                )
 
-            latex_strs.append(" & ".join([name_str, type_str, values_str, transformation_str, prior_str]) + "\\\\")
+            latex_strs.append(
+                " & ".join(
+                    [name_str, type_str, values_str, transformation_str, prior_str]
+                )
+                + "\\\\"
+            )
 
         latex_strs.extend(["\\hline", "\\end{tabular}"])
         return "\n".join(latex_strs)

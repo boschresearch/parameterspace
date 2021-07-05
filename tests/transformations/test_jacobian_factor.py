@@ -7,7 +7,10 @@ import numpy as np
 import pytest
 from scipy.optimize import approx_fprime, check_grad
 
-from parameterspace.transformations.log_zero_one import LogZeroOneFloat, LogZeroOneInteger
+from parameterspace.transformations.log_zero_one import (
+    LogZeroOneFloat,
+    LogZeroOneInteger,
+)
 from parameterspace.transformations.zero_one import ZeroOneFloat, ZeroOneInteger
 
 

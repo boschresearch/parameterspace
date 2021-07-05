@@ -3,14 +3,14 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from typing import Union, Optional
+from typing import Optional, Union
 
 import numpy as np
 
+from parameterspace.parameters.base import BaseParameter
 from parameterspace.priors.uniform import Uniform
 from parameterspace.transformations.base import BaseTransformation
 from parameterspace.transformations.categorical import Cat2Num
-from parameterspace.parameters.base import BaseParameter
 from parameterspace.utils import store_init_arguments
 
 
@@ -45,7 +45,13 @@ class OrdinalParameter(BaseParameter):
         transformation = Cat2Num(values) if transformation is None else transformation
         prior = Uniform() if prior is None else prior
         super().__init__(
-            name, prior, transformation, is_continuous=False, is_ordered=True, num_values=len(values), inactive_numerical_value=inactive_numerical_value
+            name,
+            prior,
+            transformation,
+            is_continuous=False,
+            is_ordered=True,
+            num_values=len(values),
+            inactive_numerical_value=inactive_numerical_value,
         )
 
     def check_value(self, value):

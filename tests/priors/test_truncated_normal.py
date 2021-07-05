@@ -7,12 +7,11 @@ import itertools
 import json
 
 import numpy as np
+import pytest
 import scipy.special as sps
 
-import pytest
-
-from parameterspace.priors.truncated_normal import TruncatedNormal
 from parameterspace.priors.base import BasePrior
+from parameterspace.priors.truncated_normal import TruncatedNormal
 
 mean, std = 1, 2
 
@@ -57,7 +56,9 @@ def test_truncated_normal_prior_pdf_and_likelihood_within_bounds(num_samples=64)
 
     poor_mans_normal = lambda x: np.exp(-np.power(x - mean, 2) / (2 * np.power(std, 2)))
     # compute pdfs by hand
-    Z = (sps.erf((1 - mean) / std / np.sqrt(2)) - sps.erf((0 - mean) / std / np.sqrt(2))) / 2
+    Z = (
+        sps.erf((1 - mean) / std / np.sqrt(2)) - sps.erf((0 - mean) / std / np.sqrt(2))
+    ) / 2
     pdfs = poor_mans_normal(samples) / Z / np.sqrt(2 * np.pi) / std
 
     assert np.allclose(pdfs, p.pdf(samples))
