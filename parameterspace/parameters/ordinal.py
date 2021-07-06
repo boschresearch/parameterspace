@@ -23,7 +23,7 @@ class OrdinalParameter(BaseParameter):
         name: str,
         values: list,
         *,
-        prior: Union[list, np.array, None] = None,
+        prior: Union[list, np.ndarray, None] = None,
         transformation: Optional[BaseTransformation] = None,
         inactive_numerical_value: Optional[float] = np.nan
     ):

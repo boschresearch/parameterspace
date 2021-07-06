@@ -26,8 +26,8 @@ class ParameterSpace(SearchSpace):
     def __init__(self, seed: int = None):
         super().__init__(seed=seed)
 
-        self._parameters = {}
-        self._constants = {}
+        self._parameters: dict = {}
+        self._constants: dict = {}
 
     def __len__(self):
         return len(self._parameters)
@@ -286,7 +286,7 @@ class ParameterSpace(SearchSpace):
 
         return config
 
-    def log_likelihood(self, configuration: dict) -> Union[float, np.NaN]:
+    def log_likelihood(self, configuration: dict) -> float:
         """Compute log-likelihood of a configuration under the given prior.
 
         Args:
