@@ -1,5 +1,5 @@
-# Copyright (c) 2021 - for information on the respective copyright owner
-# see the NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
+# Copyright (c) 2021 - for information on the respective copyright owner see the
+# NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -58,9 +58,8 @@ def extract_lambda_information(source_lines: Iterable) -> Tuple[list, str]:
         signature, body = condensed_code.split("lambda")[1].split(":")
     except IndexError:
         raise RuntimeError(
-            "The function definition \n{}\ndoes not look like a valid Lambda function!".format(
-                "".join(source_lines)
-            )
+            "The function definition does not look like a valid Lambda function:\n"
+            + "".join(source_lines)
         )
 
     while len(body) > 1:

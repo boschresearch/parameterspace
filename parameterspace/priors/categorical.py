@@ -1,5 +1,5 @@
-# Copyright (c) 2021 - for information on the respective copyright owner
-# see the NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
+# Copyright (c) 2021 - for information on the respective copyright owner see the
+# NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -36,7 +36,8 @@ class Categorical(BasePrior):
     def pdf(self, value):
         """Probability given the numerical representation(s).
 
-        The numerical representation is converted to integers and the corresponding prior_values are returned.
+        The numerical representation is converted to integers and the corresponding
+        prior_values are returned.
         If the value exceeds the given range of values, a ValueError is raised.
 
         Only finite values are converted, and the respective probability is computed.
@@ -58,7 +59,8 @@ class Categorical(BasePrior):
             pdf[idx] = self.probabilities[integer_value]
         except IndexError:
             raise ValueError(
-                "Unknown value in the numerical representation for a categorical parameter encountered!"
+                "Unknown value in the numerical representation for a "
+                + "categorical parameter encountered!"
             )
         return pdf.squeeze()
 

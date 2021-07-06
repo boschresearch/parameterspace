@@ -1,5 +1,5 @@
-# Copyright (c) 2021 - for information on the respective copyright owner
-# see the NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
+# Copyright (c) 2021 - for information on the respective copyright owner see the
+# NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -14,7 +14,7 @@ from parameterspace.utils import store_init_arguments
 
 
 class Cat2Num(BaseTransformation):
-    """Translates values of any type into discrete, equidistant values between 0 and 1."""
+    """Translates any values into discrete, equidistant values between 0 and 1."""
 
     @store_init_arguments
     def __init__(self, values: list):

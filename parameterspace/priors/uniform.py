@@ -1,5 +1,5 @@
-# Copyright (c) 2021 - for information on the respective copyright owner
-# see the NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
+# Copyright (c) 2021 - for information on the respective copyright owner see the
+# NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -17,7 +17,10 @@ class Uniform(BasePrior):
         super().__init__([0, 1])
 
     def pdf(self, value):
-        """Return constant for values inside the bounds, zero if outside, and NaN for NaNs."""
+        """Calculate probability density function value.
+
+        Return constant for values inside the bounds, zero if outside, and NaN for NaNs.
+        """
         value = np.atleast_1d(value)
         active_idx = np.isfinite(value)
         pdf = np.full(value.shape, np.nan)

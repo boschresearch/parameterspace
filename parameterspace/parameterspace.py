@@ -1,5 +1,5 @@
-# Copyright (c) 2021 - for information on the respective copyright owner
-# see the NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
+# Copyright (c) 2021 - for information on the respective copyright owner see the
+# NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -341,23 +341,24 @@ class ParameterSpace(SearchSpace):
             if v is None:
                 if p["condition"](configuration):
                     warnings.warn(
-                        "Parameter %s should be active, but does not have a value assigned.\n%s"
-                        % (n, configuration),
+                        f"Parameter {n} should be active, "
+                        + "but does not have a value assigned.\n"
+                        + f"Full configuration: {configuration}",
                         RuntimeWarning,
                     )
                     return False
             else:
                 if not p["condition"](configuration):
                     warnings.warn(
-                        "Parameter %s = %s should not be active!\nFull configuration: %s"
-                        % (n, v, configuration),
+                        f"Parameter {n} = {v} should not be active!\n"
+                        + f"Full configuration: {configuration}",
                         RuntimeWarning,
                     )
                     return False
                 if not p["parameter"].check_value(v):
                     warnings.warn(
-                        "Parameter %s = %s is not a valid assignment.\n Full configuration: %s"
-                        % (n, v, configuration),
+                        f"Parameter {n} = {v} is not a valid assignment!\n"
+                        + f"Full configuration: {configuration}",
                         RuntimeWarning,
                     )
                     return False
@@ -388,7 +389,8 @@ class ParameterSpace(SearchSpace):
                 )
             if configuration[name] != value:
                 raise ValueError(
-                    f"Constant parameter {name} has value {configuration[name]}, but should be {value}!"
+                    f"Constant parameter {name} has value {configuration[name]}, "
+                    + f"but should be {value}!"
                 )
 
         vec = np.zeros(len(self._parameters), dtype=float)
@@ -400,7 +402,8 @@ class ParameterSpace(SearchSpace):
     def val2num(self, configuration: dict) -> np.ndarray:
         """
         Attention:
-            Deprecated. Use [ParameterSpace.to_numerical][parameterspace.parameterspace.ParameterSpace.to_numerical].
+            Deprecated. Use [ParameterSpace.to_numerical]\
+            [parameterspace.parameterspace.ParameterSpace.to_numerical].
 
         Args:
             configuration: Configuration to convert.
@@ -413,7 +416,8 @@ class ParameterSpace(SearchSpace):
 
         """
         warnings.warn(
-            "Method ParameterSpace.val2num is deprecated and will be removed in the future! Please use ParameterSpace.to_numerical instead.",
+            "Method ParameterSpace.val2num is deprecated and will be removed in "
+            + "the future! Please use ParameterSpace.to_numerical instead.",
             category=DeprecationWarning,
         )
         return self.to_numerical(configuration)
@@ -429,7 +433,8 @@ class ParameterSpace(SearchSpace):
     def num2val(self, vector: np.ndarray) -> dict:
         """
         Attention:
-            Deprecated. Use [ParameterSpace.from_numerical][parameterspace.parameterspace.ParameterSpace.from_numerical].
+            Deprecated. Use [ParameterSpace.from_numerical]\
+            [parameterspace.parameterspace.ParameterSpace.from_numerical].
 
         Args:
             vector: Numerical vector representation of a configuration.
@@ -439,7 +444,8 @@ class ParameterSpace(SearchSpace):
 
         """
         warnings.warn(
-            "Method ParameterSpace.num2val is deprecated and will be removed in the future! Please use ParameterSpace.from_numerical instead.",
+            "Method ParameterSpace.num2val is deprecated and will be removed in the "
+            + "future! Please use ParameterSpace.from_numerical instead.",
             category=DeprecationWarning,
         )
         return self.from_numerical(vector)
