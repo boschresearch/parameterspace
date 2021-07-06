@@ -115,17 +115,17 @@ class ParameterSpace(SearchSpace):
             Contains "constants" and "parameters" (with "condition").
         """
 
-        return_dict = {
-            "bit_generator_state": self._rng.bit_generator.state,
-            "parameters": {},
-            "constants": copy.deepcopy(self._constants),
-        }
+        parameters = {}
         for p in self._parameters.values():
-            return_dict["parameters"][p["parameter"].name] = {
+            parameters[p["parameter"].name] = {
                 "parameter": p["parameter"].to_dict(),
                 "condition": p["condition"].to_dict(),
             }
-        return return_dict
+        return {
+            "bit_generator_state": self._rng.bit_generator.state,
+            "parameters": parameters,
+            "constants": copy.deepcopy(self._constants),
+        }
 
     @staticmethod
     def from_dict(dict_representation: dict) -> ParameterSpace:
@@ -472,7 +472,7 @@ class ParameterSpace(SearchSpace):
                 raise ValueError(
                     "Parameterspace contains non-continuous parameter:\n{}".format(p)
                 )
-            bounds.append(list(p.get_numerical_bounds()))
+            bounds.append(tuple(p.get_numerical_bounds()))
         return bounds
 
     def to_latex_table(self, name_dict: Optional[dict] = None) -> str:
