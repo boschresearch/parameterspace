@@ -233,10 +233,10 @@ class ParameterSpace(SearchSpace):
 
         try:
             self._parameters.pop(name)
-        except KeyError:
+        except KeyError as e:
             raise KeyError(
-                "Parameter '{}' is not part of the ParameteSpace.".format(name)
-            )
+                f"Parameter '{name}' is not part of the ParameterSpace."
+            ) from e
 
     def get_parameter_names(self) -> List[str]:
         """Get names of all parameters already in the current `ParameterSpace`.
@@ -495,8 +495,10 @@ class ParameterSpace(SearchSpace):
         try:
             from num2tex import configure as num2tex_configure
             from num2tex import num2tex
-        except ImportError:
-            raise RuntimeError("To use this functionality, please install num2tex.")
+        except ImportError as e:
+            raise RuntimeError(
+                "To use this functionality, please install num2tex."
+            ) from e
 
         num2tex_configure(exp_format="cdot")
 
@@ -509,9 +511,8 @@ class ParameterSpace(SearchSpace):
             "\\hline",
         ]
 
-        for parameter_name in self._parameters.keys():
+        for parameter_name in self._parameters:
             parameter = self._parameters[parameter_name]["parameter"]
-            condition = self._parameters[parameter_name]["condition"]
 
             name_str = name_dict.get(parameter_name, parameter.name)
             transformation_name = type(parameter._transformation).__name__

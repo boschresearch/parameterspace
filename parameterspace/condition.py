@@ -8,7 +8,7 @@ from __future__ import annotations
 import inspect
 from typing import Callable
 
-import parameterspace.utils as utils
+from parameterspace import utils
 
 
 class Condition:
@@ -127,9 +127,11 @@ class Condition:
             return_condition.varnames.append(varnames)
             return_condition.all_varnames |= set(varnames)
 
+            # pylint: disable=eval-used
             return_condition.functions.append(
-                eval("lambda {}: {}".format(", ".join(varnames), function_text))
+                eval(f"lambda {', '.join(varnames)}: {function_text}")
             )
+            # pylint: enable=eval-used
 
         return return_condition
 

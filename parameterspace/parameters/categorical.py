@@ -44,9 +44,7 @@ class CategoricalParameter(BaseParameter):
 
         if prior is None:
             prior = Categorical([1.0] * len(values))
-        elif isinstance(prior, Categorical):
-            prior = prior
-        else:
+        elif not isinstance(prior, Categorical):
             prior = Categorical(prior)
 
         super().__init__(
