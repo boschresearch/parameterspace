@@ -29,7 +29,7 @@ class LogZeroOneFloat(BaseTransformation):
             bounds: Bounds must be positive for log-transformation.
         """
         assert min(bounds) > 0, "bounds must be positive for log-transformation"
-        super().__init__(bounds, np.array([0, 1]))
+        super().__init__(bounds, (0, 1))
         self.log_bounds = np.log(self.input_bounds)
         self.log_interval_size = self.log_bounds[1] - self.log_bounds[0]
 
@@ -70,7 +70,7 @@ class LogZeroOneInteger(BaseTransformation):
             bounds: Bounds must be positive for log-transformation.
         """
         assert min(bounds) > 0, "bounds must be positive for log-transformation"
-        super().__init__(bounds, [0, 1])
+        super().__init__(bounds, (0, 1))
         self.log_bounds = np.log(self.input_bounds + np.array([-0.5, 0.5]))
         self.log_interval_size = self.log_bounds[1] - self.log_bounds[0]
 

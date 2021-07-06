@@ -16,7 +16,7 @@ class ZeroOneFloat(BaseTransformation):
 
     @store_init_arguments
     def __init__(self, bounds: Optional[Tuple]):
-        super().__init__(bounds, [0, 1])
+        super().__init__(bounds, (0, 1))
         self.interval_size = bounds[1] - bounds[0]
 
     def inverse(self, numerical_value: float) -> float:
@@ -43,7 +43,7 @@ class ZeroOneInteger(BaseTransformation):
 
     @store_init_arguments
     def __init__(self, bounds: Optional[Tuple]):
-        super().__init__(bounds, np.array([0, 1]))
+        super().__init__(bounds, (0, 1))
         self.interval_size = bounds[1] - bounds[0] + 1
 
     def inverse(self, numerical_value: float) -> int:

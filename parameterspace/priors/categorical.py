@@ -20,7 +20,7 @@ class Categorical(BasePrior):
         Args:
             prior_values: Array containing the probabilities for each value.
         """
-        super().__init__([0, 1])
+        super().__init__((0, 1))
         self.probabilities = np.array(prior_values)
         if not np.all(self.probabilities >= 0):
             raise ValueError("Probabilities must be non-negative!")

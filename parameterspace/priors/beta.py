@@ -20,7 +20,7 @@ class Beta(BasePrior):
             a: Positive parameter of the Beta distribution.
             b: Positive parameter of the Beta distribution.
         """
-        super().__init__([0, 1])
+        super().__init__((0, 1))
         self.a, self.b = a, b
         self.sps_beta_dist = sps.beta(a, b)
 

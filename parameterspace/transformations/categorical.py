@@ -22,7 +22,7 @@ class Cat2Num(BaseTransformation):
         Args:
             values: List of all possible values of (almost) arbitrary type.
         """
-        super().__init__(None, [0, 1])
+        super().__init__(None, (0, 1))
         self.values = copy.deepcopy(values)
 
     def inverse(self, numerical_value: float) -> Any:

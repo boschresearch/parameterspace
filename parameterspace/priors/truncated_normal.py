@@ -21,7 +21,7 @@ class TruncatedNormal(BasePrior):
             mean: Mean of the distribution.
             std: Standard deviation of the distribution
         """
-        super().__init__([0, 1])
+        super().__init__((0, 1))
         a, b = (self.bounds - mean) / std
         self.mean = mean
         self.std = std
