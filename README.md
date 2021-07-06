@@ -50,7 +50,7 @@ pip install parameterspace
 
 ### Prerequisites
 
-- Python 3+
+- Python >= 3.7
 - [Poetry](https://python-poetry.org/docs/#installation)
 
 ### Setup environment
