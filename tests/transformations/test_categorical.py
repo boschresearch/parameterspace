@@ -16,7 +16,9 @@ from parameterspace.transformations.categorical import Cat2Num
 def test_cat2num_transformation():
     values = ["foo", "bar", 1, 2, 3]
     t = Cat2Num(values)
-    reference_values = [(values[i], (i + 0.5) / len(values)) for i in np.random.choice(len(values), 128)]
+    reference_values = [
+        (values[i], (i + 0.5) / len(values)) for i in np.random.choice(len(values), 128)
+    ]
     # check_* functions in util don't work, b/c the types are not necessarily numerical
     ref_original = [v[0] for v in reference_values]
     ref_transformed = [v[1] for v in reference_values]
@@ -50,7 +52,9 @@ def test_cat2num_to_from_dict():
     assert t1 == t2
 
     # for good measure, let's make sure that both transform values to back and forth in the same way
-    reference_values = [(values[i], (i + 0.5) / len(values)) for i in np.random.choice(len(values), 128)]
+    reference_values = [
+        (values[i], (i + 0.5) / len(values)) for i in np.random.choice(len(values), 128)
+    ]
     # check_* functions in util don't work, b/c the types are not necessarily numerical
     ref_original = [v[0] for v in reference_values]
     ref_transformed = [v[1] for v in reference_values]

@@ -6,10 +6,9 @@
 import abc
 import copy
 import importlib
-from typing import Union, Optional
+from typing import Optional, Union
 
 import numpy as np
-
 
 from parameterspace.priors.base import BasePrior
 from parameterspace.transformations.base import BaseTransformation
@@ -56,9 +55,13 @@ class BaseParameter(abc.ABC):
         self._inactive_numerical_value = inactive_numerical_value
         self.transformed_bounds = self._transformation.output_bounds
 
-        assert np.allclose(self._prior.bounds, self.transformed_bounds, 1e-6), "Missmatch between the prior bounds (%s)" % (
+        assert np.allclose(
+            self._prior.bounds, self.transformed_bounds, 1e-6
+        ), "Missmatch between the prior bounds (%s)" % (
             self._prior.bounds
-        ) + "and the transformation's bounds (%s)!" % (self.transformed_bounds)
+        ) + "and the transformation's bounds (%s)!" % (
+            self.transformed_bounds
+        )
 
         self.is_continuous = is_continuous
         self.is_ordered = is_ordered
@@ -79,7 +82,9 @@ class BaseParameter(abc.ABC):
         numerical_samples = self.sample_numerical_values(num_samples, random_state)
         if num_samples is None:
             return self._transformation.inverse(numerical_samples)
-        return [self._transformation.inverse(num_value) for num_value in numerical_samples]
+        return [
+            self._transformation.inverse(num_value) for num_value in numerical_samples
+        ]
 
     def sample_numerical_values(self, num_samples=None, random_state=np.random):
         """Generates randomly sampled values based on the prior, but in the transformed space."""
@@ -97,15 +102,21 @@ class BaseParameter(abc.ABC):
 
     def check_numerical_value(self, numerical_value):
         """Check if the numerical representation of the value is valid."""
-        return self.transformed_bounds[0] <= numerical_value <= self.transformed_bounds[1]
+        return (
+            self.transformed_bounds[0] <= numerical_value <= self.transformed_bounds[1]
+        )
 
     def pdf_numerical_value(self, numerical_value):
         """Compute the PDF based on the prior."""
-        return self._prior.pdf(numerical_value) * self._transformation.jacobian_factor(numerical_value)
+        return self._prior.pdf(numerical_value) * self._transformation.jacobian_factor(
+            numerical_value
+        )
 
     def loglikelihood_numerical_value(self, numerical_value):
         """Compute the loglikelihood based on the prior."""
-        return self._prior.loglikelihood(numerical_value) + np.log(self._transformation.jacobian_factor(numerical_value))
+        return self._prior.loglikelihood(numerical_value) + np.log(
+            self._transformation.jacobian_factor(numerical_value)
+        )
 
     def loglikelihood(self, value):
         """Compute the loglikelihood based on the prior."""
@@ -129,7 +140,12 @@ class BaseParameter(abc.ABC):
         transformation = BaseTransformation.from_dict(json_dict["transformation"])
         prior = BasePrior.from_dict(json_dict["prior"])
 
-        return parameter_class(*json_dict["init_args"], **json_dict["init_kwargs"], transformation=transformation, prior=prior)
+        return parameter_class(
+            *json_dict["init_args"],
+            **json_dict["init_kwargs"],
+            transformation=transformation,
+            prior=prior
+        )
 
     def to_dict(self):
         json_dict = {
@@ -150,4 +166,6 @@ class BaseParameter(abc.ABC):
             return False
         if self.name != other.name:
             return False
-        return (self._prior == other._prior) and (self._transformation == other._transformation)
+        return (self._prior == other._prior) and (
+            self._transformation == other._transformation
+        )

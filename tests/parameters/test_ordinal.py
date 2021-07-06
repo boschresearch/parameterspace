@@ -7,10 +7,10 @@ import json
 
 import numpy as np
 
-from parameterspace.parameters.ordinal import OrdinalParameter
 from parameterspace.parameters.base import BaseParameter
+from parameterspace.parameters.ordinal import OrdinalParameter
 
-from .util import check_value_numvalue_conversion, check_sampling, check_values
+from .util import check_sampling, check_value_numvalue_conversion, check_values
 
 
 def test_ordinal_parameter():
@@ -20,7 +20,11 @@ def test_ordinal_parameter():
     assert p1.is_continuous == False
     assert p1.is_ordered == True
 
-    check_values(p1, ["freezing cold", "cool", "warm", np.pi, ["hot"]], [True, False, True, False, False])
+    check_values(
+        p1,
+        ["freezing cold", "cool", "warm", np.pi, ["hot"]],
+        [True, False, True, False, False],
+    )
 
     reference = [(values[i], (i + 0.5) / len(values)) for i in [0, 1, 2, 3]]
     check_value_numvalue_conversion(p1, reference, num_values=False)

@@ -4,8 +4,8 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import copy
-from typing import Any
 import math
+from typing import Any
 
 import numpy as np
 
@@ -14,7 +14,7 @@ from parameterspace.utils import store_init_arguments
 
 
 class Cat2Num(BaseTransformation):
-    """ Translates values of any type into discrete, equidistant values between 0 and 1."""
+    """Translates values of any type into discrete, equidistant values between 0 and 1."""
 
     @store_init_arguments
     def __init__(self, values: list):
@@ -26,7 +26,15 @@ class Cat2Num(BaseTransformation):
         self.values = copy.deepcopy(values)
 
     def inverse(self, numerical_value: float) -> Any:
-        return self.values[int(np.clip(np.around(numerical_value * len(self.values) - 0.5), 0, len(self.values) - 1))]
+        return self.values[
+            int(
+                np.clip(
+                    np.around(numerical_value * len(self.values) - 0.5),
+                    0,
+                    len(self.values) - 1,
+                )
+            )
+        ]
 
     def __call__(self, value: Any) -> float:
         idx = self.values.index(value)

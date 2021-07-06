@@ -3,7 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from typing import Optional, Tuple, Any
+from typing import Any, Optional, Tuple
 
 import numpy as np
 
@@ -20,7 +20,13 @@ class ZeroOneFloat(BaseTransformation):
         self.interval_size = bounds[1] - bounds[0]
 
     def inverse(self, numerical_value: float) -> float:
-        return float(np.clip(self.input_bounds[0] + numerical_value * (self.interval_size), self.input_bounds[0], self.input_bounds[1]))
+        return float(
+            np.clip(
+                self.input_bounds[0] + numerical_value * (self.interval_size),
+                self.input_bounds[0],
+                self.input_bounds[1],
+            )
+        )
 
     def __call__(self, value: Any) -> float:
         return float((value - self.input_bounds[0]) / self.interval_size)
@@ -41,7 +47,15 @@ class ZeroOneInteger(BaseTransformation):
         self.interval_size = bounds[1] - bounds[0] + 1
 
     def inverse(self, numerical_value: float) -> int:
-        return int(np.clip(np.around(self.input_bounds[0] - 0.5 + numerical_value * (self.interval_size)), self.input_bounds[0], self.input_bounds[1]))
+        return int(
+            np.clip(
+                np.around(
+                    self.input_bounds[0] - 0.5 + numerical_value * (self.interval_size)
+                ),
+                self.input_bounds[0],
+                self.input_bounds[1],
+            )
+        )
 
     def __call__(self, value: Any) -> float:
         return float((value - self.input_bounds[0] + 0.5) / self.interval_size)

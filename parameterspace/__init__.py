@@ -3,8 +3,7 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from parameterspace.parameters import *
 import parameterspace.priors
 import parameterspace.transformations
-
+from parameterspace.parameters import *
 from parameterspace.parameterspace import *

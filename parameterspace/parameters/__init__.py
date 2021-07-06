@@ -3,9 +3,14 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from parameterspace.parameters.continuous import ContinuousParameter
 from parameterspace.parameters.categorical import CategoricalParameter
+from parameterspace.parameters.continuous import ContinuousParameter
 from parameterspace.parameters.integer import IntegerParameter
 from parameterspace.parameters.ordinal import OrdinalParameter
 
-__all__ = ["ContinuousParameter", "CategoricalParameter", "IntegerParameter", "OrdinalParameter"]
+__all__ = [
+    "ContinuousParameter",
+    "CategoricalParameter",
+    "IntegerParameter",
+    "OrdinalParameter",
+]

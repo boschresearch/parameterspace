@@ -21,13 +21,20 @@ class Uniform(BasePrior):
         value = np.atleast_1d(value)
         active_idx = np.isfinite(value)
         pdf = np.full(value.shape, np.nan)
-        inside = np.logical_and(self.bounds[0] <= value[active_idx], value[active_idx] <= self.bounds[1])
+        inside = np.logical_and(
+            self.bounds[0] <= value[active_idx], value[active_idx] <= self.bounds[1]
+        )
         pdf[active_idx] = 1.0 / (self.bounds[1] - self.bounds[0]) * (inside)
         return pdf.squeeze()
 
     def sample(self, num_samples=None, random_state=np.random):
-        return random_state.uniform(low=self.bounds[0], high=self.bounds[1], size=num_samples)
+        return random_state.uniform(
+            low=self.bounds[0], high=self.bounds[1], size=num_samples
+        )
 
     def __repr__(self):
         """Minimal information about the Prior."""
-        return "Uniform prior in the interval [%f, %f]." % (self.bounds[0], self.bounds[1])
+        return "Uniform prior in the interval [%f, %f]." % (
+            self.bounds[0],
+            self.bounds[1],
+        )

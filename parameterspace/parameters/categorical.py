@@ -3,13 +3,14 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-from typing import Union, Any, Tuple, Optional
+from typing import Any, Optional, Tuple, Union
+
 import numpy as np
 
+from parameterspace.parameters.base import BaseParameter
 from parameterspace.priors.categorical import Categorical
 from parameterspace.transformations.base import BaseTransformation
 from parameterspace.transformations.categorical import Cat2Num
-from parameterspace.parameters.base import BaseParameter
 from parameterspace.utils import store_init_arguments
 
 
@@ -49,7 +50,13 @@ class CategoricalParameter(BaseParameter):
             prior = Categorical(prior)
 
         super().__init__(
-            name, prior, transformation, is_continuous=False, is_ordered=False, num_values=len(values), inactive_numerical_value=inactive_numerical_value
+            name,
+            prior,
+            transformation,
+            is_continuous=False,
+            is_ordered=False,
+            num_values=len(values),
+            inactive_numerical_value=inactive_numerical_value,
         )
 
     def check_value(self, value):

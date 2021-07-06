@@ -37,4 +37,6 @@ class Beta(BasePrior):
         return "Beta distribution with parameteres a=%f, b=%f" % (self.a, self.b)
 
     def __eq__(self, other):
-        return super().__eq__(other) and np.allclose([self.a, self.b], [other.a, other.b])
+        return super().__eq__(other) and np.allclose(
+            [self.a, self.b], [other.a, other.b]
+        )

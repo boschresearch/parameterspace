@@ -26,7 +26,9 @@ class Categorical(BasePrior):
             raise ValueError("Probabilities must be non-negative!")
 
         self.probabilities = self.probabilities / np.sum(self.probabilities)
-        self.numerical_values = (np.arange(len(self.probabilities), dtype=float) + 0.5) / len(self.probabilities)
+        self.numerical_values = (
+            np.arange(len(self.probabilities), dtype=float) + 0.5
+        ) / len(self.probabilities)
 
     def loglikelihood(self, value):
         return np.log(self.pdf(value))
@@ -47,20 +49,33 @@ class Categorical(BasePrior):
         value = np.atleast_1d(value)
         idx = np.isfinite(value)
 
-        integer_value = np.around(len(self.probabilities) * value[idx] - 0.5).astype(int)
+        integer_value = np.around(len(self.probabilities) * value[idx] - 0.5).astype(
+            int
+        )
         pdf = np.full(value.shape, np.nan, dtype=float)
 
         try:
             pdf[idx] = self.probabilities[integer_value]
         except IndexError:
-            raise ValueError("Unknown value in the numerical representation for a categorical parameter encountered!")
+            raise ValueError(
+                "Unknown value in the numerical representation for a categorical parameter encountered!"
+            )
         return pdf.squeeze()
 
     def sample(self, num_samples=None, random_state=np.random):
-        return random_state.choice(self.numerical_values, size=num_samples, replace=True, p=self.probabilities)
+        return random_state.choice(
+            self.numerical_values, size=num_samples, replace=True, p=self.probabilities
+        )
 
     def __repr__(self):
-        return "Categorical prior for %i values with p = %s" % (len(self.probabilities), self.probabilities)
+        return "Categorical prior for %i values with p = %s" % (
+            len(self.probabilities),
+            self.probabilities,
+        )
 
     def __eq__(self, other):
-        return super().__eq__(other) and (len(self.probabilities) == len(other.probabilities)) and np.allclose(self.probabilities, other.probabilities)
+        return (
+            super().__eq__(other)
+            and (len(self.probabilities) == len(other.probabilities))
+            and np.allclose(self.probabilities, other.probabilities)
+        )
