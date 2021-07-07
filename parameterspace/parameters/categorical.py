@@ -1,5 +1,5 @@
-# Copyright (c) 2021 - for information on the respective copyright owner
-# see the NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
+# Copyright (c) 2021 - for information on the respective copyright owner see the
+# NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -22,7 +22,7 @@ class CategoricalParameter(BaseParameter):
         self,
         name: str,
         values: Tuple[Any],
-        prior: Union[list, np.array, None] = None,
+        prior: Union[list, np.ndarray, None] = None,
         transformation: Optional[BaseTransformation] = None,
         inactive_numerical_value: Optional[float] = np.nan,
     ):
@@ -44,9 +44,7 @@ class CategoricalParameter(BaseParameter):
 
         if prior is None:
             prior = Categorical([1.0] * len(values))
-        elif isinstance(prior, Categorical):
-            prior = prior
-        else:
+        elif not isinstance(prior, Categorical):
             prior = Categorical(prior)
 
         super().__init__(

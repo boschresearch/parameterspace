@@ -1,5 +1,5 @@
-# Copyright (c) 2021 - for information on the respective copyright owner
-# see the NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
+# Copyright (c) 2021 - for information on the respective copyright owner see the
+# NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -21,7 +21,7 @@ class TruncatedNormal(BasePrior):
             mean: Mean of the distribution.
             std: Standard deviation of the distribution
         """
-        super().__init__([0, 1])
+        super().__init__((0, 1))
         a, b = (self.bounds - mean) / std
         self.mean = mean
         self.std = std

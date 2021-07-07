@@ -1,5 +1,5 @@
-# Copyright (c) 2021 - for information on the respective copyright owner
-# see the NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
+# Copyright (c) 2021 - for information on the respective copyright owner see the
+# NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -26,8 +26,8 @@ class ParameterSpace(SearchSpace):
     def __init__(self, seed: int = None):
         super().__init__(seed=seed)
 
-        self._parameters = {}
-        self._constants = {}
+        self._parameters: dict = {}
+        self._constants: dict = {}
 
     def __len__(self):
         return len(self._parameters)
@@ -115,17 +115,17 @@ class ParameterSpace(SearchSpace):
             Contains "constants" and "parameters" (with "condition").
         """
 
-        return_dict = {
-            "bit_generator_state": self._rng.bit_generator.state,
-            "parameters": {},
-            "constants": copy.deepcopy(self._constants),
-        }
+        parameters = {}
         for p in self._parameters.values():
-            return_dict["parameters"][p["parameter"].name] = {
+            parameters[p["parameter"].name] = {
                 "parameter": p["parameter"].to_dict(),
                 "condition": p["condition"].to_dict(),
             }
-        return return_dict
+        return {
+            "bit_generator_state": self._rng.bit_generator.state,
+            "parameters": parameters,
+            "constants": copy.deepcopy(self._constants),
+        }
 
     @staticmethod
     def from_dict(dict_representation: dict) -> ParameterSpace:
@@ -233,10 +233,10 @@ class ParameterSpace(SearchSpace):
 
         try:
             self._parameters.pop(name)
-        except KeyError:
+        except KeyError as e:
             raise KeyError(
-                "Parameter '{}' is not part of the ParameteSpace.".format(name)
-            )
+                f"Parameter '{name}' is not part of the ParameterSpace."
+            ) from e
 
     def get_parameter_names(self) -> List[str]:
         """Get names of all parameters already in the current `ParameterSpace`.
@@ -286,7 +286,7 @@ class ParameterSpace(SearchSpace):
 
         return config
 
-    def log_likelihood(self, configuration: dict) -> Union[float, np.NaN]:
+    def log_likelihood(self, configuration: dict) -> float:
         """Compute log-likelihood of a configuration under the given prior.
 
         Args:
@@ -341,23 +341,24 @@ class ParameterSpace(SearchSpace):
             if v is None:
                 if p["condition"](configuration):
                     warnings.warn(
-                        "Parameter %s should be active, but does not have a value assigned.\n%s"
-                        % (n, configuration),
+                        f"Parameter {n} should be active, "
+                        + "but does not have a value assigned.\n"
+                        + f"Full configuration: {configuration}",
                         RuntimeWarning,
                     )
                     return False
             else:
                 if not p["condition"](configuration):
                     warnings.warn(
-                        "Parameter %s = %s should not be active!\nFull configuration: %s"
-                        % (n, v, configuration),
+                        f"Parameter {n} = {v} should not be active!\n"
+                        + f"Full configuration: {configuration}",
                         RuntimeWarning,
                     )
                     return False
                 if not p["parameter"].check_value(v):
                     warnings.warn(
-                        "Parameter %s = %s is not a valid assignment.\n Full configuration: %s"
-                        % (n, v, configuration),
+                        f"Parameter {n} = {v} is not a valid assignment!\n"
+                        + f"Full configuration: {configuration}",
                         RuntimeWarning,
                     )
                     return False
@@ -388,7 +389,8 @@ class ParameterSpace(SearchSpace):
                 )
             if configuration[name] != value:
                 raise ValueError(
-                    f"Constant parameter {name} has value {configuration[name]}, but should be {value}!"
+                    f"Constant parameter {name} has value {configuration[name]}, "
+                    + f"but should be {value}!"
                 )
 
         vec = np.zeros(len(self._parameters), dtype=float)
@@ -400,7 +402,8 @@ class ParameterSpace(SearchSpace):
     def val2num(self, configuration: dict) -> np.ndarray:
         """
         Attention:
-            Deprecated. Use [ParameterSpace.to_numerical][parameterspace.parameterspace.ParameterSpace.to_numerical].
+            Deprecated. Use [ParameterSpace.to_numerical]\
+            [parameterspace.parameterspace.ParameterSpace.to_numerical].
 
         Args:
             configuration: Configuration to convert.
@@ -413,7 +416,8 @@ class ParameterSpace(SearchSpace):
 
         """
         warnings.warn(
-            "Method ParameterSpace.val2num is deprecated and will be removed in the future! Please use ParameterSpace.to_numerical instead.",
+            "Method ParameterSpace.val2num is deprecated and will be removed in "
+            + "the future! Please use ParameterSpace.to_numerical instead.",
             category=DeprecationWarning,
         )
         return self.to_numerical(configuration)
@@ -429,7 +433,8 @@ class ParameterSpace(SearchSpace):
     def num2val(self, vector: np.ndarray) -> dict:
         """
         Attention:
-            Deprecated. Use [ParameterSpace.from_numerical][parameterspace.parameterspace.ParameterSpace.from_numerical].
+            Deprecated. Use [ParameterSpace.from_numerical]\
+            [parameterspace.parameterspace.ParameterSpace.from_numerical].
 
         Args:
             vector: Numerical vector representation of a configuration.
@@ -439,7 +444,8 @@ class ParameterSpace(SearchSpace):
 
         """
         warnings.warn(
-            "Method ParameterSpace.num2val is deprecated and will be removed in the future! Please use ParameterSpace.from_numerical instead.",
+            "Method ParameterSpace.num2val is deprecated and will be removed in the "
+            + "future! Please use ParameterSpace.from_numerical instead.",
             category=DeprecationWarning,
         )
         return self.from_numerical(vector)
@@ -472,7 +478,7 @@ class ParameterSpace(SearchSpace):
                 raise ValueError(
                     "Parameterspace contains non-continuous parameter:\n{}".format(p)
                 )
-            bounds.append(list(p.get_numerical_bounds()))
+            bounds.append(tuple(p.get_numerical_bounds()))
         return bounds
 
     def to_latex_table(self, name_dict: Optional[dict] = None) -> str:
@@ -489,8 +495,10 @@ class ParameterSpace(SearchSpace):
         try:
             from num2tex import configure as num2tex_configure
             from num2tex import num2tex
-        except ImportError:
-            raise RuntimeError("To use this functionality, please install num2tex.")
+        except ImportError as e:
+            raise RuntimeError(
+                "To use this functionality, please install num2tex."
+            ) from e
 
         num2tex_configure(exp_format="cdot")
 
@@ -503,9 +511,8 @@ class ParameterSpace(SearchSpace):
             "\\hline",
         ]
 
-        for parameter_name in self._parameters.keys():
+        for parameter_name in self._parameters:
             parameter = self._parameters[parameter_name]["parameter"]
-            condition = self._parameters[parameter_name]["condition"]
 
             name_str = name_dict.get(parameter_name, parameter.name)
             transformation_name = type(parameter._transformation).__name__

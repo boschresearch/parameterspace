@@ -1,5 +1,5 @@
-# Copyright (c) 2021 - for information on the respective copyright owner
-# see the NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
+# Copyright (c) 2021 - for information on the respective copyright owner see the
+# NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -87,11 +87,11 @@ class BaseParameter(abc.ABC):
         ]
 
     def sample_numerical_values(self, num_samples=None, random_state=np.random):
-        """Generates randomly sampled values based on the prior, but in the transformed space."""
+        """Generate random values based on the prior, but in the transformed space."""
         return self._prior.sample(num_samples, random_state=random_state)
 
     def val2num(self, value):
-        """Translate a value into its numerical representation (including normalization)."""
+        """Translate a value into its numerical representation (incl. normalization)."""
         if value is None:
             return self._inactive_numerical_value
         return self._transformation(value)

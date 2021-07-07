@@ -1,5 +1,5 @@
-# Copyright (c) 2021 - for information on the respective copyright owner
-# see the NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
+# Copyright (c) 2021 - for information on the respective copyright owner see the
+# NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
 #
 # SPDX-License-Identifier: Apache-2.0
 
@@ -26,9 +26,9 @@ def store_init_arguments(init_method: Callable) -> Callable:
     def wrapper(self, *args, **kwargs):
         args = [a.tolist() if isinstance(a, np.ndarray) else a for a in args]
 
-        for k in kwargs.keys():
-            if isinstance(kwargs[k], np.ndarray):
-                kwargs[k] = kwargs[k].tolist()
+        for k, k_value in kwargs.items():
+            if isinstance(k_value, np.ndarray):
+                kwargs[k] = k_value.tolist()
 
         self._init_args = args
         self._init_kwargs = kwargs
@@ -56,17 +56,16 @@ def extract_lambda_information(source_lines: Iterable) -> Tuple[list, str]:
 
     try:
         signature, body = condensed_code.split("lambda")[1].split(":")
-    except IndexError:
+    except IndexError as e:
         raise RuntimeError(
-            "The function definition \n{}\ndoes not look like a valid Lambda function!".format(
-                "".join(source_lines)
-            )
-        )
+            "The function definition does not look like a valid Lambda function:\n"
+            + "".join(source_lines)
+        ) from e
 
     while len(body) > 1:
         lambda_def = f"lambda {signature}: {body}"
         try:
-            code = compile(lambda_def, "<unused filename>", "eval")
+            _ = compile(lambda_def, "<unused filename>", "eval")
             break
         except SyntaxError:
             body = body[:-1]
