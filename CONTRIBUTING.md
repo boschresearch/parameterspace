@@ -6,7 +6,8 @@ the GitHub issues tracking system prior to any code development to coordinate
 with the parameterspace development team early in the process. Coordinating up
 front helps to avoid frustration later on.
 Please follow the conventiones outlined by the pre-commit hooks mentioned in the
-repository README and add tests for the functionality you would like to contribute.
+repository [README](README.md) and add tests for the functionality you would like
+to contribute.
 
 Your contribution must be licensed under the Apache-2.0 license, the license
 used by this project.
