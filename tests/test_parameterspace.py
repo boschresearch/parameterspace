@@ -429,7 +429,7 @@ def test_get_continuous_bounds():
     s1.add(p1)
     s1.add(p2)
 
-    assert s1.get_continuous_bounds() == [[0, 1], [0, 1]]
+    assert s1.get_continuous_bounds() == [(0, 1), (0, 1)]
 
     p3 = IntegerParameter("p3", (-5, 5))
 
