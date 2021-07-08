@@ -5,6 +5,7 @@
 
 import itertools
 import json
+import math
 
 import dill
 import numpy as np
@@ -412,7 +413,7 @@ def test_num2val2num(num_samples=128):
     space.add(p3)
     space.add(p4)
 
-    for i in range(num_samples):
+    for _ in range(num_samples):
         sample = space.sample()
         num = space.to_numerical(sample)
         s2 = space.from_numerical(num)
@@ -429,7 +430,7 @@ def test_get_continuous_bounds():
     s1.add(p1)
     s1.add(p2)
 
-    assert s1.get_continuous_bounds() == [[0, 1], [0, 1]]
+    assert s1.get_continuous_bounds() == [(0, 1), (0, 1)]
 
     p3 = IntegerParameter("p3", (-5, 5))
 
@@ -492,7 +493,7 @@ def test_to_from_dict(num_samples=128):
     space2 = ParameterSpace.from_dict(space_dict)
     space3 = ParameterSpace.from_dict(json.loads(json_dict))
 
-    for i in range(num_samples):
+    for _ in range(num_samples):
         sample = space1.sample()
         num1 = space1.to_numerical(sample)
         s1 = space1.from_numerical(num1)
@@ -511,9 +512,9 @@ def test_to_from_dict(num_samples=128):
         )
 
         for k in sample.keys():
-            assert sample[k] == s1[k] or all(np.isnan([sample[k], s1[k]]))
-            assert sample[k] == s2[k] or all(np.isnan([sample[k], s2[k]]))
-            assert sample[k] == s3[k] or all(np.isnan([sample[k], s3[k]]))
+            assert sample[k] == s1[k] or math.isclose(sample[k], s1[k], rel_tol=1e-15)
+            assert sample[k] == s2[k] or math.isclose(sample[k], s2[k], rel_tol=1e-15)
+            assert sample[k] == s3[k] or math.isclose(sample[k], s3[k], rel_tol=1e-15)
 
     assert space1 == space2
 
@@ -575,8 +576,8 @@ def test_dill(num_samples=128):
         )
 
         for k in sample.keys():
-            assert sample[k] == s1[k] or all(np.isnan([sample[k], s1[k]]))
-            assert sample[k] == s2[k] or all(np.isnan([sample[k], s2[k]]))
+            assert sample[k] == s1[k] or math.isclose(sample[k], s1[k], rel_tol=1e-15)
+            assert sample[k] == s2[k] or math.isclose(sample[k], s2[k], rel_tol=1e-15)
 
     assert space1 == space2
 
