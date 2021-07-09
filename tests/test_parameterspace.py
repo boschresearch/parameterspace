@@ -512,9 +512,9 @@ def test_to_from_dict(num_samples=128):
         )
 
         for k in sample.keys():
-            assert sample[k] == s1[k] or math.isclose(sample[k], s1[k], rel_tol=1e-15)
-            assert sample[k] == s2[k] or math.isclose(sample[k], s2[k], rel_tol=1e-15)
-            assert sample[k] == s3[k] or math.isclose(sample[k], s3[k], rel_tol=1e-15)
+            assert sample[k] == s1[k] or math.isclose(sample[k], s1[k])
+            assert sample[k] == s2[k] or math.isclose(sample[k], s2[k])
+            assert sample[k] == s3[k] or math.isclose(sample[k], s3[k])
 
     assert space1 == space2
 
@@ -576,8 +576,8 @@ def test_dill(num_samples=128):
         )
 
         for k in sample.keys():
-            assert sample[k] == s1[k] or math.isclose(sample[k], s1[k], rel_tol=1e-15)
-            assert sample[k] == s2[k] or math.isclose(sample[k], s2[k], rel_tol=1e-15)
+            assert sample[k] == s1[k] or math.isclose(sample[k], s1[k])
+            assert sample[k] == s2[k] or math.isclose(sample[k], s2[k])
 
     assert space1 == space2
 
