@@ -15,6 +15,10 @@ class SearchSpace(abc.ABC):
         """The number of parameters in the space."""
 
     @abc.abstractmethod
+    def __iter__(self):
+        """Iterate over the parameters of the space."""
+
+    @abc.abstractmethod
     def seed(self, seed: int) -> None:
         """Reinitialize the random number generator with a new seed."""
 
