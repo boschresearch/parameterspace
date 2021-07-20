@@ -1,5 +1,8 @@
 site_name: ParameterSpace
-site_url: ""
+site_description: "Define parameter spaces with conditionalities and priors."
+site_url: "https://boschresearch.github.io/parameterspace/"
+repo_url: "https://github.com/boschresearch/parameterspace"
+repo_name: "boschresearch/parameterspace"
 
 theme:
   name: material
@@ -17,6 +20,10 @@ copyright: |
     SPDX-License-Identifier: Apache-2.0
   </p>
   <center>
+
+extra:
+  version:
+    provider: mike
 
 extra_css:
   - assets/extra.css
