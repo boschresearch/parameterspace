@@ -38,6 +38,11 @@ your needs. Before using it in a safety relevant setting, make sure that the sof
 fulfills your requirements and adjust it according to any applicable safety standards
 (e.g. ISO 26262).
 
+## Documentation
+
+**Visit [boschresearch.github.io/parameterspace](https://boschresearch.github.io/parameterspace/)**
+
+
 ## Installation
 
 The `parameterspace` package can be installed from [pypi.org](https://pypi.org):
