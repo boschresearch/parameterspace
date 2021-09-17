@@ -44,6 +44,7 @@ pytest-rerunfailures = "^10.1"
 num2tex = "^0.8"
 mkdocs-jupyter = "^0.17.3"
 mike = "^1.0.1"
+pydocstyle = "^6.1.1"
 
 [tool.poetry.extras]
 examples = ["notebook", "matplotlib"]
@@ -86,6 +87,12 @@ disable = [
     "too-many-arguments",
     "too-few-public-methods"
 ]
+
+[tool.pydocstyle]
+convention = "google"
+add-ignore = "D105"
+match = '(?!test_|__init__).*\.py'
+match-dir = '[^\tests].*'
 
 [tool.coverage.run]
 source = ['parameterspace']
