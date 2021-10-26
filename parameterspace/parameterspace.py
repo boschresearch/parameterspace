@@ -188,7 +188,16 @@ class ParameterSpace(SearchSpace):
             if not self._parameters[name]["parameter"].check_value(value):
                 raise ValueError(f"Invalid value `{value}` for parameter '{name}'!")
 
-        self._constants.update(**kwargs)
+        # remove any constants here that might not be active based on some parameter values,
+        # but are still specified here.
+        actual_constants = copy.copy(kwargs)
+        for n in kwargs.keys():
+            p = self._parameters[n]
+            if p["condition"].all_varnames <= set(kwargs) and not p["condition"](
+                kwargs
+            ):
+                actual_constants.pop(n, None)
+        self._constants.update(**actual_constants)
 
         for p in list(self._parameters.keys()):
 

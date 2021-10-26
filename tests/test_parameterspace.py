@@ -681,5 +681,25 @@ def test_fix_with_conditions():
         assert c["p4"] in ["foo", "bar", "baz"]
 
 
+def test_fix_with_inactive_constants():
+    space = ps.ParameterSpace()
+    space.add(ps.CategoricalParameter("model", ["a", "b"]))
+    space.add(
+        ps.ContinuousParameter("v1", bounds=[0, 1]),
+        condition=lambda model: model == "a",
+    )
+    space.add(
+        ps.ContinuousParameter("v2", bounds=[0, 1]),
+        condition=lambda model: model == "a",
+    )
+    space.fix(model="b", v1=0.5)
+
+    sample = space.sample()
+
+    assert len(space) == 0
+    assert len(sample) == 1
+    assert sample["model"] == "b"
+
+
 if __name__ == "__main__":
     pytest.main(["--pdb", "-s", __file__])
