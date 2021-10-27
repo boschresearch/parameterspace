@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "parameterspace"
-version = "0.7.13"
+version = "0.7.12"
 description = "Parametrized hierarchical spaces with flexible priors and transformations."
 readme = "README.md"
 repository = "https://github.com/boschresearch/parameterspace"
