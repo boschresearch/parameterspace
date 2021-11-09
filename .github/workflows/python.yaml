@@ -55,7 +55,7 @@ jobs:
           poetry publish --build
   docs:
     needs: test
-    if: startsWith(github.ref, 'refs/tags/v')
+    if: ${{ startsWith(github.ref, 'refs/tags/v')  || contains(github.event.head_commit.message, '[update-docs]') }}
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
@@ -72,8 +72,18 @@ jobs:
         run: |
           git config --global user.name docs deploy
           git config --global user.email docs@github-action.local
-          echo "RELEASE_TAG_VERSION=${{ github.event.release.tag_name }}" >> $GITHUB_ENV
-      - name: Publish
+      - name: Get GIT_TAG_NAME
+        uses: olegtarasov/get-tag@v2.1
+        id: tagName
+      - name: "Get previous tag"
+        id: previoustag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
+      - name: Update docs for latest version
+        if: ${{ contains(github.event.head_commit.message, '[update-docs]') && startsWith(github.ref, 'refs/tags/v') == false}}
         run: |
-          poetry run mike deploy --push --update-aliases ${RELEASE_TAG_VERSION} latest
+          poetry run mike deploy --push ${{ steps.previoustag.outputs.tag }}
+      - name: Publish docs for new version
+        if: startsWith(github.ref, 'refs/tags/v')
+        run: |
+          poetry run mike deploy --push --update-aliases ${{ env.GIT_TAG_NAME }} latest
           poetry run mike set-default --push latest
