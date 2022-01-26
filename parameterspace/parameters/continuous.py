@@ -22,7 +22,7 @@ class ContinuousParameter(BaseParameter):
     def __init__(
         self,
         name: str,
-        bounds: Tuple,
+        bounds: Tuple[float, float],
         *,
         prior: Optional[BasePrior] = None,
         transformation: Union[BaseTransformation, str, None] = None,
