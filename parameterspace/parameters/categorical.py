@@ -21,7 +21,7 @@ class CategoricalParameter(BaseParameter):
     def __init__(
         self,
         name: str,
-        values: Tuple[Any],
+        values: Tuple[Any, ...],
         prior: Union[list, np.ndarray, None] = None,
         transformation: Optional[BaseTransformation] = None,
         inactive_numerical_value: Optional[float] = np.nan,
