@@ -728,13 +728,14 @@ def test_continuous_parameter_with_log_transform_on_boundaries():
 
     config = space.from_numerical(np.array([0.0]))
     vector = space.to_numerical(config)
-    assert config["p1"] == 1.
+    assert config["p1"] == 1.0
     assert (vector == 0).all()
 
     config = space.from_numerical(np.array([1.0]))
     vector = space.to_numerical(config)
-    assert config["p1"] == 32.
+    assert config["p1"] == 32.0
     assert (vector == 1).all()
+
 
 if __name__ == "__main__":
     pytest.main(["--pdb", "-s", __file__])

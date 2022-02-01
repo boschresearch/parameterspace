@@ -79,7 +79,7 @@ class LogZeroOneInteger(BaseTransformation):
         [summary]
         """
         integer_value = np.around(
-                np.exp(self.log_bounds[0] + numerical_value * (self.log_interval_size))
+            np.exp(self.log_bounds[0] + numerical_value * (self.log_interval_size))
         )
         # clip result to bound due to rounding problems when the numerical value is 0.0
         return int(np.clip(integer_value, *self.input_bounds))
