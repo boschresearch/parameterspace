@@ -78,11 +78,11 @@ class LogZeroOneInteger(BaseTransformation):
         """
         [summary]
         """
-        return int(
-            np.around(
+        integer_value = np.around(
                 np.exp(self.log_bounds[0] + numerical_value * (self.log_interval_size))
-            )
         )
+        # clip result to bound due to rounding problems when the numerical value is 0.0
+        return int(np.clip(integer_value, *self.input_bounds))
 
     def __call__(self, value: Any) -> float:
         return float((np.log(value) - self.log_bounds[0]) / self.log_interval_size)

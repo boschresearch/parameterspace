@@ -703,23 +703,38 @@ def test_fix_with_inactive_constants():
     assert not space.has_conditions()
 
 
-def test_integer_parameter_with_log_transform_from_and_to_numerical_zero_is_finite():
+def test_integer_parameter_with_log_transform_on_boundaries():
+    """Make sure that the log transformation works on the boundaries of the interval."""
     space = ps.ParameterSpace()
     space.add(ps.IntegerParameter("p1", bounds=(1, 32), transformation="log"))
+
     config = space.from_numerical(np.array([0.0]))
     vector = space.to_numerical(config)
-    assert np.isfinite(vector).all(), vector
-    assert vector[0] == 0.0
+    assert config["p1"] == 1
+    assert (vector >= 0).all()
+    assert (vector <= 1).all()
+
+    config = space.from_numerical(np.array([1.0]))
+    vector = space.to_numerical(config)
+    assert config["p1"] == 32
+    assert (vector >= 0).all()
+    assert (vector <= 1).all()
 
 
-def test_continuous_parameter_with_log_transform_from_and_to_numerical_zero_is_finite():
+def test_continuous_parameter_with_log_transform_on_boundaries():
+    """Make sure that the log transformation works on the boundaries of the interval."""
     space = ps.ParameterSpace()
     space.add(ps.ContinuousParameter("p1", bounds=(1.0, 32.0), transformation="log"))
+
     config = space.from_numerical(np.array([0.0]))
     vector = space.to_numerical(config)
-    assert np.isfinite(vector).all(), vector
-    assert vector[0] == 0.0
+    assert config["p1"] == 1.
+    assert (vector == 0).all()
 
+    config = space.from_numerical(np.array([1.0]))
+    vector = space.to_numerical(config)
+    assert config["p1"] == 32.
+    assert (vector == 1).all()
 
 if __name__ == "__main__":
     pytest.main(["--pdb", "-s", __file__])
