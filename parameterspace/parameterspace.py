@@ -255,6 +255,25 @@ class ParameterSpace(SearchSpace):
         """
         return list(self._parameters.keys())
 
+    def get_parameter_by_name(self, name: str) -> BaseParameter:
+        """Get parameter with the given name.
+
+        Args:
+            name: Name of the parameter.
+
+        Returns:
+            Parameter with the given name.
+
+        Raises:
+            KeyError: In case parameter doesn't exist.
+        """
+        try:
+            return self._parameters[name]
+        except KeyError as e:
+            raise KeyError(
+                f"Parameter '{name}' is not part of the ParameterSpace."
+            ) from e
+
     def sample(
         self, partial_configuration: dict = None, rng: np.random.Generator = None
     ) -> dict:

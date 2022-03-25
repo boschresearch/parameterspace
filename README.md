@@ -16,7 +16,7 @@
 A package to define parameter spaces consisting of mixed types (continuous, integer,
 categorical) with conditions and priors. It allows for easy specification of the
 parameters and their dependencies. The `ParameterSpace` object can then be used to
-sample random random configurations from the prior and convert any valid configuration
+sample random configurations from the prior and convert any valid configuration
 into a numerical representation. This numerical representation has the following
 properties:
 
