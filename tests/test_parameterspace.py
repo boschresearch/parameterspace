@@ -46,6 +46,10 @@ def test_simple_space():
     assert names[1] == "p2"
     assert not space.has_conditions()
 
+    assert space.get_parameter_by_name("p1")["parameter"] == p1
+    with pytest.raises(KeyError):
+        space.get_parameter_by_name("p3")
+
     sample1 = space.sample(rng=np.random.default_rng(42))
     sample2 = space.sample(rng=np.random.default_rng(42))
 
