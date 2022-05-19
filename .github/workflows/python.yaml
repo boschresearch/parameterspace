@@ -19,17 +19,16 @@ jobs:
       - name: Sorted Imports
         if: always()
         run: |
-          poetry run isort --check-only --profile black --line-length 88 .
+          poetry run isort --check-only .
       - name: Type Checks
         if: always()
         continue-on-error: true
-        run: poetry run mypy --config-file pyproject.toml .
+        run: poetry run mypy .
       - name: Linting
         if: always()
         continue-on-error: true
         run: |
-          poetry run pylint --errors-only parameterspace/
-          poetry run pylint --errors-only tests/
+          poetry run pylint --errors-only parameterspace/ tests/
       - name: DocStyle Linting
         continue-on-error: true
         if: always()
