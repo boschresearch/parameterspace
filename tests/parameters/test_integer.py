@@ -36,7 +36,7 @@ def test_integer_parameter():
 
 
 @pytest.mark.flaky(max_runs=4)
-def test_integer_log_transform(num_samples=2 ** 14):
+def test_integer_log_transform(num_samples=2**14):
     bounds = np.array((1, 32))
     p = IntegerParameter("bar", bounds, transformation="log")
 
@@ -70,7 +70,7 @@ def test_integer_log_transform(num_samples=2 ** 14):
 
 
 @pytest.mark.flaky(max_runs=4)
-def test_integer_uniformity(num_samples=2 ** 14):
+def test_integer_uniformity(num_samples=2**14):
     bounds = np.array((-4, 8), dtype=int)
     p1 = IntegerParameter("bar", bounds)
     samples1 = p1.sample_values(num_samples)

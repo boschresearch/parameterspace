@@ -19,9 +19,9 @@ from parameterspace.transformations.zero_one import ZeroOneFloat, ZeroOneInteger
     "transformation_cls,bounds,gradient_bounds",
     [
         (LogZeroOneFloat, [1e-3, 1e3], [0, 1]),
-        (LogZeroOneInteger, [1, 1024 ** 3], [0.5, 1]),
+        (LogZeroOneInteger, [1, 1024**3], [0.5, 1]),
         (ZeroOneFloat, [0, 1e3], [0, 1]),
-        (ZeroOneInteger, [1, 1024 ** 3], [0, 1]),
+        (ZeroOneInteger, [1, 1024**3], [0, 1]),
     ],
 )
 def test_jacobian_factor(transformation_cls, bounds, gradient_bounds):
