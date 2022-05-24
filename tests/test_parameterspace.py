@@ -686,7 +686,7 @@ def test_fix_with_conditions():
 
 
 def test_fix_with_inactive_constants():
-    """ Make sure that inactive parameters passed to `fix` don't end up as constants"""
+    """Make sure that inactive parameters passed to `fix` don't end up as constants"""
     space = ps.ParameterSpace()
     space.add(ps.CategoricalParameter("model", ["a", "b"]))
     space.add(

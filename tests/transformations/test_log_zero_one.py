@@ -20,7 +20,7 @@ from .util import check_bounds, check_transform_and_inverse
 def test_log_zero_one_integer_transformation():
     bounds = (1, 1024)
     t = LogZeroOneInteger(bounds)
-    ref_values = [2 ** i for i in range(11)]
+    ref_values = [2**i for i in range(11)]
 
     ref_values_transformed = (np.log(ref_values) - np.log(bounds[0] - 0.5)) / (
         np.log(bounds[1] + 0.5) - np.log(bounds[0] - 0.5)
@@ -33,7 +33,7 @@ def test_log_zero_one_integer_transformation():
 def test_log_zero_one_integer_to_from_dict():
     bounds = (1, 1024)
     t1 = LogZeroOneInteger(bounds)
-    ref_values = [2 ** i for i in range(11)]
+    ref_values = [2**i for i in range(11)]
     ref_values_transformed = (np.log(ref_values) - np.log(bounds[0] - 0.5)) / (
         np.log(bounds[1] + 0.5) - np.log(bounds[0] - 0.5)
     )

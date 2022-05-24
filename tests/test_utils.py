@@ -6,6 +6,7 @@
 import inspect
 import math
 
+import numpy as np
 import pytest
 
 import parameterspace.utils as utils
@@ -24,9 +25,9 @@ def test_extract_lambda_information():
     expected_variables = []
     expected_bodies = []
 
-    functions.append(lambda p1, p2: p1 ** 2 + p2 ** 2 < 1)
+    functions.append(lambda p1, p2: p1**2 + p2**2 < 1)
     expected_variables.append(["p1", "p2"])
-    expected_bodies.append("p1 ** 2 + p2 ** 2 < 1")
+    expected_bodies.append("p1**2 + p2**2 < 1")
 
     functions.append(lambda p1, p2: math.sin(p1 + p2))
     expected_variables.append(["p1", "p2"])
@@ -52,7 +53,7 @@ def test_verify_lambda():
     functions = []
     expected_to_pass = []
 
-    functions.append(lambda p1, p2: p1 ** 2 + p2 ** 2 < 1)
+    functions.append(lambda p1, p2: p1**2 + p2**2 < 1)
     expected_to_pass.append(True)
 
     functions.append(lambda p1, p2: math.sin(p1 + p2))

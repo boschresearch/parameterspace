@@ -21,7 +21,7 @@ from .util import check_sampling, check_value_numvalue_conversion, check_values
 
 
 @pytest.mark.flaky(max_runs=4)
-def test_continuous_parameter(num_samples=2 ** 14):
+def test_continuous_parameter(num_samples=2**14):
     bounds = np.array((-8, 4))
     p = ContinuousParameter("foo", bounds)
 
@@ -50,7 +50,7 @@ def test_continuous_parameter(num_samples=2 ** 14):
 
 
 @pytest.mark.flaky(max_runs=4)
-def test_continuous_log_transform(num_samples=2 ** 14):
+def test_continuous_log_transform(num_samples=2**14):
     bounds = np.array((0.004, 4))
     p1 = ContinuousParameter("bar", bounds, transformation="log")
 
