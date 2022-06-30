@@ -36,6 +36,9 @@ jobs:
       - name: Run tests
         if: always()
         run: poetry run pytest
+      - name: Build docs
+        if: always()
+        run: poetry run mkdocs build
   deploy:
     needs: test
     if: startsWith(github.ref, 'refs/tags/v')

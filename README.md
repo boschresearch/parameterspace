@@ -20,7 +20,7 @@ sample random configurations from the prior and convert any valid configuration
 into a numerical representation. This numerical representation has the following
 properties:
 
-- it results in a Numpy `ndarray` of type `numpy.float64`
+- it results in a Numpy `ndarray` of type `float64`
 - transformed representation between 0 and 1 (uniform) including integers, ordinal and
   categorical parameters
 - inactive parameters are masked as `numpy.nan` values
@@ -55,7 +55,7 @@ pip install parameterspace
 
 ### Prerequisites
 
-- Python >= 3.7
+- Python >= 3.8
 - [Poetry](https://python-poetry.org/docs/#installation)
 
 ### Setup environment
