@@ -44,6 +44,7 @@ pytest-rerunfailures = "^10.1"
 num2tex = "^0.8"
 mike = "^1.1.2"
 pydocstyle = "^6.1.1"
+ipython-genutils = "^0.2.0"
 
 [tool.poetry.extras]
 examples = ["notebook", "matplotlib"]
