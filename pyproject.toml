@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "parameterspace"
-version = "0.7.15"
+version = "0.7.16"
 description = "Parametrized hierarchical spaces with flexible priors and transformations."
 readme = "README.md"
 repository = "https://github.com/boschresearch/parameterspace"
@@ -21,8 +21,8 @@ url = "https://pypi.python.org/simple"
 default = true
 
 [tool.poetry.dependencies]
-python = ">=3.7,<4.0"
-numpy = ">=1.17.0"
+python = ">=3.8,<4.0"
+numpy = ">=1.22.0"
 scipy = ">=1.6.0"
 
 [tool.poetry.dev-dependencies]
