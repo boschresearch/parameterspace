@@ -33,7 +33,7 @@ mkdocs-awesome-pages-plugin = "^2.7.0"
 mkdocs-gen-files = "^0.3.4"
 mkdocs-material = "^8.2.11"
 mkdocstrings = {version="^0.18.1", extras=["python-legacy"]}
-mkdocs-jupyter = "^0.17.3"
+mkdocs-jupyter = "^0.21.0"
 mypy = "^0.910"
 pylint = "^2.8.2"
 pytest = "^6.2.2"
@@ -44,7 +44,6 @@ pytest-rerunfailures = "^10.1"
 num2tex = "^0.8"
 mike = "^1.1.2"
 pydocstyle = "^6.1.1"
-ipython-genutils = "^0.2.0"
 
 [tool.poetry.extras]
 examples = ["notebook", "matplotlib"]
