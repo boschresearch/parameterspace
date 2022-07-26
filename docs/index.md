@@ -1,7 +1,7 @@
 # Overview
 
 The package **parameterspace** is used to define parameter spaces consisting of mixed
-types (continuous, integers, catergoricals) with conditionalities and priors.
+types (continuous, integer, categorical) with conditionalities and priors.
 It allows for easy specification of the parameters and their dependencies.
 
 The [`ParameterSpace`](parameterspace/parameterspace) object can then be used to sample
@@ -20,7 +20,7 @@ configuration.
 The function might not be smooth, but for robust methods (like genetic
 algorithms/evolutionary strategies) this might still be valuable.
 
-The package can be installed from the Bosch internal PyPi mirrors with:
+The package can be installed from [PyPi](https://pypi.org/project/parameterspace/) with:
 
 ```bash
 pip install parameterspace
