@@ -1,5 +1,11 @@
 # ParameterSpace
 
+[![Actions Status](https://github.com/boschresearch/parameterspace/workflows/ci-cd-pipeline/badge.svg)](https://github.com/boschresearch/parameterspace/actions)
+[![PyPI - Wheel](https://img.shields.io/pypi/wheel/parameterspace)](https://pypi.org/project/parameterspace/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/parameterspace)](https://pypi.org/project/parameterspace/)
+[![License: Apache-2.0](https://img.shields.io/github/license/boschresearch/parameterspace)](https://github.com/boschresearch/parameterspace/blob/main/LICENSE)
+[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)
+
 **Contents:**
 
 - [About](#about)
