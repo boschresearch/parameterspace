@@ -707,6 +707,25 @@ def test_fix_with_inactive_constants():
     assert not space.has_conditions()
 
 
+def test_fix_parameter_constant_names():
+    p1 = IntegerParameter("p1", (-5, 5))
+    p2 = ContinuousParameter("p2", (0, 5))
+
+    space = ParameterSpace()
+
+    space.add(p1)
+    space.add(p2)
+
+    space.fix(p2=3)
+    parameter_names = space.get_parameter_names()
+    constant_names = space.get_constant_names()
+
+    assert "p1" in parameter_names
+    assert "p2" not in parameter_names
+    assert "p2" in constant_names
+    assert "p1" not in constant_names
+
+
 def test_integer_parameter_with_log_transform_on_boundaries():
     """Make sure that the log transformation works on the boundaries of the interval."""
     space = ps.ParameterSpace()
