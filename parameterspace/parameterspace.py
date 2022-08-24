@@ -169,7 +169,7 @@ class ParameterSpace(SearchSpace):
             **kwargs: All arguments to this method have to be keyword arguments
                 with valid parameter names and valid values.\n
                 The method will change the current `ParameterSpace` such that
-                thenumerical representation does not contain any fixed
+                the numerical representation does not contain any fixed
                 parameters (or always inactive ones).\n
                 The dictionary representation will still contain the fixed
                 parameters with their respective value.
@@ -254,6 +254,14 @@ class ParameterSpace(SearchSpace):
             Parameter names.
         """
         return list(self._parameters.keys())
+
+    def get_constant_names(self) -> List[str]:
+        """Get names of the parameters set to a constant value via the `fix()` method.
+
+        Returns:
+            Names of constants in the current `ParameterSpace`.
+        """
+        return list(self._constants.keys())
 
     def get_parameter_by_name(self, name: str) -> BaseParameter:
         """Get parameter with the given name.
