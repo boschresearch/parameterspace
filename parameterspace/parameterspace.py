@@ -256,10 +256,10 @@ class ParameterSpace(SearchSpace):
         return list(self._parameters.keys())
 
     def get_constant_names(self) -> List[str]:
-        """Get names of all constants already in the current `ParameterSpace`.
+        """Get names of the parameters set to a constant value via the `fix()` method.
 
         Returns:
-            Constant names.
+            Names of constants in the current `ParameterSpace`.
         """
         return list(self._constants.keys())
 
