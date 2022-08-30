@@ -36,8 +36,9 @@ class IntegerParameter(BaseParameter):
             name: Name of the parameter.
             bounds: Lower and upper bound for the parameter.
             prior: Default prior is the UniformInteger prior.
-            transformation: Default transformation is the identity. If a string is
-                given, the transform is created automatically for supported transforms.
+            transformation: Default transformation is the affine-linear transformation
+                of the bounds to `[0,1]`. If a string is given, the transform is created
+                automatically for supported transforms.
             inactive_numerical_value: Placeholder value for this parameter in case it
                 is not active.
         """
@@ -51,7 +52,6 @@ class IntegerParameter(BaseParameter):
 
         prior = Uniform() if prior is None else prior
 
-        # TODO: Ask Stefan: inactive_numerical_value is unused/not passed
         super().__init__(
             name,
             prior,
@@ -59,7 +59,7 @@ class IntegerParameter(BaseParameter):
             is_continuous=False,
             is_ordered=True,
             num_values=bounds[1] - bounds[0] + 1,
-            inactive_numerical_value=np.nan,
+            inactive_numerical_value=inactive_numerical_value,
         )
 
     def __repr__(self):

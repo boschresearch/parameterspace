@@ -36,8 +36,9 @@ class ContinuousParameter(BaseParameter):
             bounds: Lower and upper bound for the parameter.
             prior: Default prior is the Uniform prior which will fail if at least one
                 of the bounds is infinite!
-            transformation: Default transformation is the identity. If a string is
-                given, the transform is created automatically for supported transforms.
+            transformation: Default transformation is the affine-linear transformation
+                of the bounds to `[0,1]`. If a string is given, the transform is created
+                automatically for supported transforms.
             inactive_numerical_value:  Placeholder value for this parameter in case
                 it is not active.
         """
