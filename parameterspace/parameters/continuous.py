@@ -64,7 +64,7 @@ class ContinuousParameter(BaseParameter):
     def __repr__(self):
         """Add bounds to the string representation."""
         string = super().__repr__()
-        string += f"Bounds: [{self.bounds[0]}, {self.bounds[1]}]\n"
+        string += f"Bounds: ({self.bounds[0]}, {self.bounds[1]})\n"
         return string
 
     def check_value(self, value):

@@ -83,7 +83,7 @@ def test_verify_lambda():
     # body can't be too long
     # pylint: disable=line-too-long
     functions.append(
-        lambda: "Very long string to make trigger the upper character limit. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores"
+        lambda: "Very long string to trigger the upper character limit. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores"
     )
     expected_to_pass.append(False)
 

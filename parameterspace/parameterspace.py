@@ -518,7 +518,7 @@ class ParameterSpace(SearchSpace):
             p = self[n]["parameter"]
             if not p.is_continuous:
                 raise ValueError(
-                    f"Parameterspace contains non-continuous parameter:\n{p}"
+                    f"Parameterspace contains a non-continuous parameter:\n{p}"
                 )
             bounds.append(tuple(p.get_numerical_bounds()))
         return bounds

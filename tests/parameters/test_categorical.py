@@ -19,8 +19,8 @@ def test_categorical_parameter():
 
     p = CategoricalParameter("foo", values, prior=[1] * len(values))
 
-    assert p.is_continuous is False
-    assert p.is_ordered is False
+    assert not p.is_continuous
+    assert not p.is_ordered
 
     check_values(p, [-1, 2, "foo", 4], [False, True, False, True])
     check_value_numvalue_conversion(
@@ -40,8 +40,8 @@ def test_categorical_parameter_mixed_types():
 
     p = CategoricalParameter("foo", values)
 
-    assert p.is_continuous is False
-    assert p.is_ordered is False
+    assert not p.is_continuous
+    assert not p.is_ordered
 
     check_values(p, ["foo", "bar", "foobar", 42], [True, True, False, True])
 

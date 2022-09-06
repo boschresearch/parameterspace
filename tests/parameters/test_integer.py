@@ -20,7 +20,7 @@ def test_integer_parameter():
     bounds = np.array((-4, 8))
     p = IntegerParameter("foo", bounds)
 
-    assert p.is_continuous is False
+    assert not p.is_continuous
     assert p.is_ordered
 
     check_values(p, [-5, 2, 2.1, 5], [False, True, False, True])

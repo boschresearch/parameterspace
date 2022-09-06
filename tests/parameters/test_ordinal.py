@@ -17,7 +17,7 @@ def test_ordinal_parameter():
     values = ["freezing cold", "cold", "warm", "hot"]
     p1 = OrdinalParameter("foo", values)
 
-    assert p1.is_continuous is False
+    assert not p1.is_continuous
     assert p1.is_ordered is True
 
     check_values(
