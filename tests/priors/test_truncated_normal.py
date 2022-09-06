@@ -54,18 +54,20 @@ def test_truncated_normal_prior_pdf_and_likelihood_within_bounds(num_samples=64)
     samples = p.sample(num_samples)
     lls = p.loglikelihood(samples)
 
-    poor_mans_normal = lambda x: np.exp(-np.power(x - mean, 2) / (2 * np.power(std, 2)))
+    def _poor_mans_normal(x):
+        return np.exp(-np.power(x - mean, 2) / (2 * np.power(std, 2)))
+
     # compute pdfs by hand
     Z = (
         sps.erf((1 - mean) / std / np.sqrt(2)) - sps.erf((0 - mean) / std / np.sqrt(2))
     ) / 2
-    pdfs = poor_mans_normal(samples) / Z / np.sqrt(2 * np.pi) / std
+    pdfs = _poor_mans_normal(samples) / Z / np.sqrt(2 * np.pi) / std
 
     assert np.allclose(pdfs, p.pdf(samples))
 
     for i, j in itertools.combinations(range(len(lls)), 2):
         ll_diff1 = lls[i] - lls[j]
-        ll_diff2 = np.log(poor_mans_normal(samples[i]) / poor_mans_normal(samples[j]))
+        ll_diff2 = np.log(_poor_mans_normal(samples[i]) / _poor_mans_normal(samples[j]))
 
         assert np.allclose(ll_diff1, ll_diff2, 1e-6)
 

@@ -55,15 +55,17 @@ def test_beta_prior_pdf_and_likelihood_within_bounds(num_samples=64):
     samples = p.sample(num_samples)
     lls = p.loglikelihood(samples)
 
-    poor_mans_beta = lambda x: np.power(x, a - 1) * np.power(1 - x, b - 1)
+    def _poor_mans_beta(x):
+        return np.power(x, a - 1) * np.power(1 - x, b - 1)
+
     Z = sps.gamma(a) * sps.gamma(b) / sps.gamma(a + b)
-    pdfs = poor_mans_beta(samples) / Z
+    pdfs = _poor_mans_beta(samples) / Z
 
     assert np.allclose(pdfs, p.pdf(samples))
 
     for i, j in itertools.combinations(range(len(lls)), 2):
         ll_diff1 = lls[i] - lls[j]
-        ll_diff2 = np.log(poor_mans_beta(samples[i]) / poor_mans_beta(samples[j]))
+        ll_diff2 = np.log(_poor_mans_beta(samples[i]) / _poor_mans_beta(samples[j]))
 
         assert np.allclose(ll_diff1, ll_diff2, 1e-6)
 
