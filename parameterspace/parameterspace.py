@@ -13,9 +13,13 @@ from typing import Any, Callable, List, Optional, Tuple, Union
 
 import numpy as np
 
-import parameterspace as ps
 from parameterspace.base import SearchSpace
 from parameterspace.condition import Condition
+from parameterspace.parameters import (
+    CategoricalParameter,
+    ContinuousParameter,
+    IntegerParameter,
+)
 from parameterspace.parameters.base import BaseParameter
 
 
@@ -559,13 +563,13 @@ class ParameterSpace(SearchSpace):
             transformation_name = type(parameter._transformation).__name__
             prior_name = type(parameter._prior).__name__
 
-            if isinstance(parameter, ps.IntegerParameter):
+            if isinstance(parameter, IntegerParameter):
                 type_str = "Integer"
                 values_str = f"$[{parameter.bounds[0]}, {parameter.bounds[1]}]$"
                 transformation_str = "Log" if "Log" in transformation_name else ""
                 prior_str = prior_name
 
-            if isinstance(parameter, ps.ContinuousParameter):
+            if isinstance(parameter, ContinuousParameter):
                 type_str = "Float"
                 prior_str = prior_name
 
@@ -578,7 +582,7 @@ class ParameterSpace(SearchSpace):
                     transformation_str = " "
                     values_str = f"$[{parameter.bounds[0]}, {parameter.bounds[1]}]$"
 
-            if isinstance(parameter, ps.CategoricalParameter):
+            if isinstance(parameter, CategoricalParameter):
                 type_str = "Categorical"
                 values_str = "[" + ", ".join(parameter.values) + "]"
                 transformation_str = " "
