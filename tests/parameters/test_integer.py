@@ -46,12 +46,6 @@ def test_integer_log_transform(num_samples=2**14):
     check_sampling(p)
 
     samples = p.sample_values(num_samples=num_samples)
-    stat, p_value = sps.kstest(
-        np.log(samples),
-        sps.uniform(
-            loc=np.log(bounds[0]), scale=np.log(bounds[1]) - np.log(bounds[0])
-        ).cdf,
-    )
 
     # uniform distribution in log space is equivalent to the reciprocal distribution
     # reference: https://en.wikipedia.org/wiki/Reciprocal_distribution
