@@ -3,7 +3,6 @@
 #
 # SPDX-License-Identifier: Apache-2.0
 
-import itertools
 import json
 
 import numpy as np
@@ -23,7 +22,7 @@ def test_uniform_prior_to_string():
 
     try:
         assert "Uniform" in str(p)
-    except:
+    except:  # pylint: disable=bare-except
         assert False
 
 
@@ -66,7 +65,7 @@ def test_uniform_prior_pdf_and_likelihood_outside_bounds(num_samples=64):
 
 def test_uniform_prior_pdf_and_likelihood_nans(num_samples=64):
     p = Uniform()
-    samples = np.full(64, np.nan)
+    samples = np.full(num_samples, np.nan)
 
     assert np.all(np.isnan(p.pdf(samples)))
 

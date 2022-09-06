@@ -11,7 +11,7 @@ import pytest
 from parameterspace.parameters.base import BaseParameter
 from parameterspace.parameters.categorical import CategoricalParameter
 
-from .util import check_sampling, check_value_numvalue_conversion, check_values
+from .util import check_value_numvalue_conversion, check_values
 
 
 def test_categorical_parameter():
@@ -19,8 +19,8 @@ def test_categorical_parameter():
 
     p = CategoricalParameter("foo", values, prior=[1] * len(values))
 
-    assert p.is_continuous == False
-    assert p.is_ordered == False
+    assert p.is_continuous is False
+    assert p.is_ordered is False
 
     check_values(p, [-1, 2, "foo", 4], [False, True, False, True])
     check_value_numvalue_conversion(
@@ -40,8 +40,8 @@ def test_categorical_parameter_mixed_types():
 
     p = CategoricalParameter("foo", values)
 
-    assert p.is_continuous == False
-    assert p.is_ordered == False
+    assert p.is_continuous is False
+    assert p.is_ordered is False
 
     check_values(p, ["foo", "bar", "foobar", 42], [True, True, False, True])
 

@@ -5,7 +5,7 @@
 
 import numpy as np
 import pytest
-from scipy.optimize import approx_fprime, check_grad
+from scipy.optimize import approx_fprime
 
 from parameterspace.transformations.log_zero_one import (
     LogZeroOneFloat,
@@ -27,11 +27,13 @@ from parameterspace.transformations.zero_one import ZeroOneFloat, ZeroOneInteger
 def test_jacobian_factor(transformation_cls, bounds, gradient_bounds):
     t = transformation_cls(bounds=bounds)
 
-    # note: numerical approximation will fail at x=0 and x=1 because outside the inverse is constant!
+    # note: numerical approximation will fail at x=0 and x=1 because outside the inverse
+    # is constant!
     x_test = np.linspace(*gradient_bounds, 66)[1:-1]
 
     def tmp_inverse(x):
-        """Little helper, because approx_fprime needs an array input, but t.inverse only accepts single values!"""
+        """Little helper, because approx_fprime needs an array input, but t.inverse
+        only accepts single values!"""
         return t.inverse(x.squeeze())
 
     for x in x_test:
@@ -41,4 +43,4 @@ def test_jacobian_factor(transformation_cls, bounds, gradient_bounds):
 
 
 if __name__ == "__main__":
-    pytest.main(("--pdb %s" % __file__).split())
+    pytest.main(f"--pdb {__file__}".split())

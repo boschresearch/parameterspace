@@ -26,7 +26,7 @@ class ContinuousParameter(BaseParameter):
         *,
         prior: Optional[BasePrior] = None,
         transformation: Union[BaseTransformation, str, None] = None,
-        inactive_numerical_value: Optional[float] = np.nan
+        inactive_numerical_value: Optional[float] = np.nan,
     ):
         """
         Initialize with options for continuous parameter.
@@ -64,7 +64,7 @@ class ContinuousParameter(BaseParameter):
     def __repr__(self):
         """Add bounds to the string representation."""
         string = super().__repr__()
-        string += "Bounds: [{}, {}]\n".format(*self.bounds)
+        string += f"Bounds: [{self.bounds[0]}, {self.bounds[1]}]\n"
         return string
 
     def check_value(self, value):

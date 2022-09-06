@@ -37,7 +37,4 @@ class Uniform(BasePrior):
 
     def __repr__(self):
         """Minimal information about the Prior."""
-        return "Uniform prior in the interval [%f, %f]." % (
-            self.bounds[0],
-            self.bounds[1],
-        )
+        return f"Uniform prior in the interval [{self.bounds[0]}, {self.bounds[1]}]."

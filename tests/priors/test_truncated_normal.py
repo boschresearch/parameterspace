@@ -26,7 +26,7 @@ def test_truncated_normal_prior_to_string():
 
     try:
         assert "Truncated normal" in str(p)
-    except:
+    except:  # pylint: disable=bare-except
         assert False
 
 

@@ -11,9 +11,7 @@ import scipy.stats as sps
 
 from parameterspace.parameters.base import BaseParameter
 from parameterspace.parameters.integer import IntegerParameter
-from parameterspace.priors.uniform import Uniform
 from parameterspace.transformations.log_zero_one import LogZeroOneInteger
-from parameterspace.transformations.zero_one import ZeroOneInteger
 
 from .util import check_sampling, check_value_numvalue_conversion, check_values
 
@@ -22,7 +20,7 @@ def test_integer_parameter():
     bounds = np.array((-4, 8))
     p = IntegerParameter("foo", bounds)
 
-    assert p.is_continuous == False
+    assert p.is_continuous is False
     assert p.is_ordered
 
     check_values(p, [-5, 2, 2.1, 5], [False, True, False, True])

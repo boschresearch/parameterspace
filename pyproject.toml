@@ -67,11 +67,8 @@ profile = "black"
 max-line-length = 88
 
 [tool.pylint.messages_control]
-extension-pkg-whitelist = "pydantic" # pydantic has issues with pylint
+extension-pkg-whitelist = ["pydantic", "numpy", "scipy"]
 disable = [
-    # Switched off due to possible collisions with black:
-    "bad-continuation",
-    "bad-whitespace",
     # Switched off to be less aggressive
     "missing-module-docstring",
     "missing-class-docstring",
@@ -83,7 +80,9 @@ disable = [
     "duplicate-code",
     "too-many-instance-attributes",
     "too-many-arguments",
-    "too-few-public-methods"
+    "too-few-public-methods",
+    "too-many-locals",
+    "protected-access"
 ]
 
 [tool.pydocstyle]

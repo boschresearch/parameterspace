@@ -6,7 +6,6 @@
 import json
 
 import numpy as np
-import pytest
 
 from parameterspace.transformations.base import BaseTransformation
 from parameterspace.transformations.zero_one import ZeroOneFloat, ZeroOneInteger

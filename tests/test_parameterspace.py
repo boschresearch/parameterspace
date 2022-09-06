@@ -183,7 +183,7 @@ def test_sampling_from_partial_assignment():
     space.add(p1)
     space.add(p2)
 
-    for i in range(16):
+    for _ in range(16):
         c = space.sample(partial_configuration={"p1": 0})
         space.check_validity(c)
         assert c["p1"] == 0
@@ -278,8 +278,8 @@ def test_hierarchical_space():
                 assert top_level_space.check_validity(config)
 
         except KeyError:
-            # this KeyError occurs for ill-formed configurations with active parameters missing
-            # which means it's a invalid configuration yielding a warning
+            # this KeyError occurs for ill-formed configurations with active parameters
+            # missing which means it's a invalid configuration yielding a warning
             with pytest.warns(RuntimeWarning):
                 assert not top_level_space.check_validity(config)
 
@@ -309,7 +309,8 @@ def test_loglikelihood_2d_no_condition():
     s1.add(p1)
     s1.add(p2)
 
-    # we will compare to a normal distribution, as the truncation is at 5 sigma, so almost irrelevant.
+    # we will compare to a normal distribution, as the truncation is at 5 sigma, so
+    # almost irrelevant.
     ref_ll = s1.log_likelihood({"p1": 0, "p2": 0})
     ref_ll_sps = 2 * norm.logpdf(0)
 
@@ -390,7 +391,7 @@ def test_conditional_space(num_samples=128):
     space.add(lr_sgd, lambda optimizer: optimizer == "SGD")
     space.add(momentum_sgd, lambda optimizer: optimizer == "SGD")
 
-    for i in range(num_samples):
+    for _ in range(num_samples):
         s = space.sample()
         assert s["optimizer"] in ["Adam", "SGD"]
 
@@ -422,8 +423,8 @@ def test_num2val2num(num_samples=128):
         num = space.to_numerical(sample)
         s2 = space.from_numerical(num)
 
-        for k in sample.keys():
-            assert sample[k] == s2[k]
+        for k, s in sample.items():
+            assert s == s2[k]
 
 
 def test_get_continuous_bounds():
@@ -465,7 +466,7 @@ def test_to_latex_table():
 
     latex_str = space.to_latex_table(name_dict)
 
-    for name, latex_name in name_dict.items():
+    for latex_name in name_dict.values():
         assert latex_name in latex_str
 
 
@@ -515,10 +516,10 @@ def test_to_from_dict(num_samples=128):
             space1.log_likelihood_numerical(num1), space3.log_likelihood_numerical(num3)
         )
 
-        for k in sample.keys():
-            assert sample[k] == s1[k] or math.isclose(sample[k], s1[k])
-            assert sample[k] == s2[k] or math.isclose(sample[k], s2[k])
-            assert sample[k] == s3[k] or math.isclose(sample[k], s3[k])
+        for k, s in sample.items():
+            assert s == s1[k] or math.isclose(s, s1[k])
+            assert s == s2[k] or math.isclose(s, s2[k])
+            assert s == s3[k] or math.isclose(s, s3[k])
 
     assert space1 == space2
 
@@ -567,7 +568,7 @@ def test_dill(num_samples=128):
     tmp = dill.dumps(space1)
     space2 = dill.loads(tmp)
 
-    for i in range(num_samples):
+    for _ in range(num_samples):
         sample = space1.sample()
         num1 = space1.to_numerical(sample)
         s1 = space1.from_numerical(num1)
@@ -579,9 +580,9 @@ def test_dill(num_samples=128):
             space1.log_likelihood_numerical(num1), space2.log_likelihood_numerical(num2)
         )
 
-        for k in sample.keys():
-            assert sample[k] == s1[k] or math.isclose(sample[k], s1[k])
-            assert sample[k] == s2[k] or math.isclose(sample[k], s2[k])
+        for k, s in sample.items():
+            assert s == s1[k] or math.isclose(s, s1[k])
+            assert s == s2[k] or math.isclose(s, s2[k])
 
     assert space1 == space2
 
@@ -614,7 +615,8 @@ def test_fix_no_conditions():
     p2 = ContinuousParameter("p2", (0, 5))
     p3 = CategoricalParameter("p3", ["foo", "bar", "baz"])
     space = ParameterSpace()
-    [space.add(p) for p in [p1, p2, p3]]
+    for p in [p1, p2, p3]:
+        space.add(p)
 
     assert len(space) == 3
 
@@ -646,7 +648,7 @@ def test_fix_with_conditions():
 
     assert len(space) == 4
 
-    for i in range(16):
+    for _ in range(16):
         c = space.sample()
         assert "p1" in c
         assert ("p2" in c) == (c["p1"] <= 0)
@@ -663,7 +665,7 @@ def test_fix_with_conditions():
     assert not space["p4"]["condition"].empty()
     assert space.has_conditions()
 
-    for i in range(16):
+    for _ in range(16):
         c = space.sample()
         assert c["p1"] == 1
         assert "p2" not in c
@@ -677,7 +679,7 @@ def test_fix_with_conditions():
     assert len(space) == 1
     assert not space.has_conditions()
 
-    for i in range(16):
+    for _ in range(16):
         c = space.sample()
         assert c["p1"] == 1
         assert "p2" not in c

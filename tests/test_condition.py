@@ -28,7 +28,7 @@ def test_condition_regular_fn():
         return x1 - x2 > 0
 
     with pytest.raises(RuntimeError):
-        c = Condition(condition_fn)
+        _ = Condition(condition_fn)
 
 
 def test_equal():
@@ -125,4 +125,4 @@ def test_from_to_dict(n_samples=64):
 
 
 if __name__ == "__main__":
-    pytest.main(("--pdb %s" % __file__).split())
+    pytest.main(f"--pdb {__file__}".split())

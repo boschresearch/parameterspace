@@ -6,7 +6,6 @@
 import json
 
 import numpy as np
-import pytest
 
 from parameterspace.transformations.base import BaseTransformation
 from parameterspace.transformations.log_zero_one import (

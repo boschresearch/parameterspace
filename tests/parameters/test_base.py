@@ -12,8 +12,8 @@ from parameterspace.transformations.zero_one import ZeroOneFloat
 from .util import check_sampling, check_value_numvalue_conversion
 
 
-class DummyParameter(BaseParameter):
-    def check_value(self):
+class PseudoParameter(BaseParameter):
+    def check_value(self, value):
         pass
 
 
@@ -21,7 +21,7 @@ def test_base_parameter():
     bounds = np.array((-4, 8))
     prior = Uniform()
 
-    p = DummyParameter(
+    p = PseudoParameter(
         "foo",
         prior,
         transformation=ZeroOneFloat(bounds),
@@ -29,7 +29,7 @@ def test_base_parameter():
         is_ordered=False,
         num_values=np.inf,
     )
-    q = DummyParameter(
+    q = PseudoParameter(
         "bar",
         prior,
         transformation=ZeroOneFloat(bounds),

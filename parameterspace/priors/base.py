@@ -5,7 +5,7 @@
 
 import abc
 import importlib
-from typing import Tuple
+from typing import Dict, Tuple
 
 import numpy as np
 
@@ -23,6 +23,8 @@ class BasePrior(abc.ABC):
         Args:
             bounds: Lower and upper bound of the prior.
         """
+        self._init_args: Tuple
+        self._init_kwargs: Dict
         self.bounds = np.array(bounds, dtype=float)
 
     def loglikelihood(self, value):

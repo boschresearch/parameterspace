@@ -27,7 +27,7 @@ def test_beta_prior_to_string():
 
     try:
         assert "Beta" in str(p)
-    except:
+    except:  # pylint: disable=bare-except
         assert False
 
 

@@ -51,16 +51,19 @@ def test_cat2num_to_from_dict():
 
     assert t1 == t2
 
-    # for good measure, let's make sure that both transform values to back and forth in the same way
+    # for good measure, let's make sure that both transform values to back and forth in
+    # the same way
     reference_values = [
         (values[i], (i + 0.5) / len(values)) for i in np.random.choice(len(values), 128)
     ]
     # check_* functions in util don't work, b/c the types are not necessarily numerical
+    # pylint: disable=unused-variable
     ref_original = [v[0] for v in reference_values]
     ref_transformed = [v[1] for v in reference_values]
 
     all_inverted1 = [t1.inverse(v) for v in ref_transformed]
     all_inverted2 = [t2.inverse(v) for v in ref_transformed]
+    # pylint: enable=unused-variable
 
     for v, tv in reference_values:
         assert t1(v) == tv
