@@ -40,16 +40,6 @@ def test_beta_prior_sampling(num_samples=64):
     assert np.all(samples <= 1)
 
 
-def test_beta_prior_sampling_deterministic_seed(num_samples=64):
-    p = Beta(a, b)
-    rng = np.random.RandomState(42)
-    samples1 = p.sample(num_samples, random_state=rng)
-    rng.seed(42)
-    samples2 = p.sample(num_samples, random_state=rng)
-
-    assert np.all(samples1 == samples2)
-
-
 def test_beta_prior_pdf_and_likelihood_within_bounds(num_samples=64):
     p = Beta(a, b)
     samples = p.sample(num_samples)
