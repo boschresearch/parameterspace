@@ -57,11 +57,11 @@ class Categorical(BasePrior):
 
         try:
             pdf[idx] = self.probabilities[integer_value]
-        except IndexError:
+        except IndexError as e:
             raise ValueError(
                 "Unknown value in the numerical representation for a "
                 + "categorical parameter encountered!"
-            )
+            ) from e
         return pdf.squeeze()
 
     def sample(self, num_samples=None, random_state=np.random):
@@ -70,9 +70,9 @@ class Categorical(BasePrior):
         )
 
     def __repr__(self):
-        return "Categorical prior for %i values with p = %s" % (
-            len(self.probabilities),
-            self.probabilities,
+        return (
+            f"Categorical prior for {len(self.probabilities)} values "
+            + f"with p = {self.probabilities}"
         )
 
     def __eq__(self, other):

@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 # For type hinting custom class (ParameterSpace):
+
 from __future__ import annotations
 
 import copy
@@ -12,12 +13,17 @@ from typing import Any, Callable, List, Optional, Tuple, Union
 
 import numpy as np
 
-import parameterspace as ps
 from parameterspace.base import SearchSpace
 from parameterspace.condition import Condition
+from parameterspace.parameters import (
+    CategoricalParameter,
+    ContinuousParameter,
+    IntegerParameter,
+)
 from parameterspace.parameters.base import BaseParameter
 
 
+# pylint: disable=too-many-public-methods
 class ParameterSpace(SearchSpace):
     """Class representing a parameter space that allows to sampling, converting and
     checking configurations.
@@ -101,7 +107,7 @@ class ParameterSpace(SearchSpace):
                 self.add(p["parameter"], tmp_condition)
         else:
             if parameter.name in self._parameters:
-                raise ValueError("Parameter %s already exists!" % parameter.name)
+                raise ValueError(f"Parameter {parameter.name} already exists!")
             self._parameters[parameter.name] = {
                 "parameter": parameter,
                 "condition": condition,
@@ -188,10 +194,10 @@ class ParameterSpace(SearchSpace):
             if not self._parameters[name]["parameter"].check_value(value):
                 raise ValueError(f"Invalid value `{value}` for parameter '{name}'!")
 
-        # remove any constants here that might not be active based on some parameter values,
-        # but are still specified here.
+        # remove any constants here that might not be active based on some parameter
+        # values, but are still specified here.
         actual_constants = copy.copy(kwargs)
-        for n in kwargs.keys():
+        for n in kwargs:
             p = self._parameters[n]
             if p["condition"].all_varnames <= set(kwargs) and not p["condition"](
                 kwargs
@@ -310,7 +316,7 @@ class ParameterSpace(SearchSpace):
         config = {} if partial_configuration is None else partial_configuration
         for n, v in config.items():
             if not self._parameters[n]["parameter"].check_value(v):
-                raise ValueError("%s = %s is not valid for this space" % (n, v))
+                raise ValueError(f"{n} = {v} is not valid for this space")
 
         config.update(self._constants)
 
@@ -512,7 +518,7 @@ class ParameterSpace(SearchSpace):
             p = self[n]["parameter"]
             if not p.is_continuous:
                 raise ValueError(
-                    "Parameterspace contains non-continuous parameter:\n{}".format(p)
+                    f"Parameterspace contains a non-continuous parameter:\n{p}"
                 )
             bounds.append(tuple(p.get_numerical_bounds()))
         return bounds
@@ -529,8 +535,11 @@ class ParameterSpace(SearchSpace):
             LaTeX table represenation
         """
         try:
+            # pylint: disable=import-outside-toplevel
             from num2tex import configure as num2tex_configure
             from num2tex import num2tex
+
+            # pylint: enable=import-outside-toplevel
         except ImportError as e:
             raise RuntimeError(
                 "To use this functionality, please install num2tex."
@@ -547,42 +556,39 @@ class ParameterSpace(SearchSpace):
             "\\hline",
         ]
 
-        for parameter_name in self._parameters:
-            parameter = self._parameters[parameter_name]["parameter"]
+        for parameter_name, parameter_value in self._parameters.items():
+            parameter = parameter_value["parameter"]
 
             name_str = name_dict.get(parameter_name, parameter.name)
             transformation_name = type(parameter._transformation).__name__
             prior_name = type(parameter._prior).__name__
 
-            if isinstance(parameter, ps.IntegerParameter):
+            if isinstance(parameter, IntegerParameter):
                 type_str = "Integer"
-                values_str = "$[{0[0]}, {0[1]}]$".format(parameter.bounds)
+                values_str = f"$[{parameter.bounds[0]}, {parameter.bounds[1]}]$"
                 transformation_str = "Log" if "Log" in transformation_name else ""
                 prior_str = prior_name
 
-            if isinstance(parameter, ps.ContinuousParameter):
+            if isinstance(parameter, ContinuousParameter):
                 type_str = "Float"
                 prior_str = prior_name
 
                 if "Log" in transformation_name:
                     transformation_str = "Log"
-                    values_str = "$[{}, {}]$".format(
-                        num2tex(parameter.bounds[0], precision=2),
-                        num2tex(parameter.bounds[1], precision=2),
-                    )
+                    lower_bound = num2tex(parameter.bounds[0], precision=2)
+                    upper_bound = num2tex(parameter.bounds[1], precision=2)
+                    values_str = f"$[{lower_bound}, {upper_bound}]$"
                 else:
                     transformation_str = " "
-                    values_str = "$[{0[0]}, {0[1]}]$".format(parameter.bounds)
+                    values_str = f"$[{parameter.bounds[0]}, {parameter.bounds[1]}]$"
 
-            if isinstance(parameter, ps.CategoricalParameter):
+            if isinstance(parameter, CategoricalParameter):
                 type_str = "Categorical"
                 values_str = "[" + ", ".join(parameter.values) + "]"
                 transformation_str = " "
                 prior_probs = parameter._prior.probabilities
                 prior_str = (
-                    "["
-                    + ",".join(map(lambda p: "{:3.2f}".format(p), prior_probs))
-                    + "]"
+                    "[" + ",".join(map(lambda p: f"{p:3.2f}", prior_probs)) + "]"
                 )
 
             latex_strs.append(

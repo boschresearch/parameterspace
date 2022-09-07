@@ -26,9 +26,8 @@ jobs:
         run: poetry run mypy .
       - name: Linting
         if: always()
-        continue-on-error: true
         run: |
-          poetry run pylint --errors-only parameterspace/ tests/
+          poetry run pylint parameterspace/ tests/
       - name: DocStyle Linting
         continue-on-error: true
         if: always()

@@ -5,7 +5,7 @@
 
 import abc
 import importlib
-from typing import Any, Optional, Tuple
+from typing import Any, Dict, Optional, Tuple
 
 import numpy as np
 
@@ -23,6 +23,8 @@ class BaseTransformation(abc.ABC):
                 bounds have to be always specified in the form
                 [lower_bound, upper_bound].
         """
+        self._init_args: Tuple
+        self._init_kwargs: Dict
         self.input_bounds = None if input_bounds is None else np.array(input_bounds)
         self.output_bounds = np.array(output_bounds)
 
@@ -50,7 +52,9 @@ class BaseTransformation(abc.ABC):
             Transformed/Numerical representation of the value.
         """
 
-    def jacobian_factor(self, numerical_value: float) -> float:
+    def jacobian_factor(
+        self, numerical_value: float  # pylint: disable=unused-argument
+    ) -> float:
         """Factor to correct the likelihood based on the non-linear transformation.
 
         Args:

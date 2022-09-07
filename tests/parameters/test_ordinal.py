@@ -10,15 +10,15 @@ import numpy as np
 from parameterspace.parameters.base import BaseParameter
 from parameterspace.parameters.ordinal import OrdinalParameter
 
-from .util import check_sampling, check_value_numvalue_conversion, check_values
+from .util import check_value_numvalue_conversion, check_values
 
 
 def test_ordinal_parameter():
     values = ["freezing cold", "cold", "warm", "hot"]
     p1 = OrdinalParameter("foo", values)
 
-    assert p1.is_continuous == False
-    assert p1.is_ordered == True
+    assert not p1.is_continuous
+    assert p1.is_ordered is True
 
     check_values(
         p1,

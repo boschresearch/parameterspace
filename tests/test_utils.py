@@ -9,17 +9,17 @@ import math
 import numpy as np
 import pytest
 
-import parameterspace.utils as utils
+from parameterspace import utils
 
 
 def test_extract_lambda_information():
     """Test parsing of some basic functions.
 
-    Sorry for the mess, but using pytest.mark.parametrize does not work here, because the parsing
-    assumes the lambda function to be defined in a line that typically looks like this:
-    ps.add(pramater, lambda p1, p2: f(p1, p2))
-    Due to the naive implementation, the parser fails when these lambdas are defined in a list, which would be the case
-    with the parametrize feature of pytest.
+    Sorry for the mess, but using pytest.mark.parametrize does not work here, because
+    the parsing assumes the lambda function to be defined in a line that typically looks
+    like this: ps.add(pramater, lambda p1, p2: f(p1, p2))
+    Due to the naive implementation, the parser fails when these lambdas are defined in
+    a list, which would be the case with the parametrize feature of pytest.
     """
     functions = []
     expected_variables = []
@@ -76,12 +76,14 @@ def test_verify_lambda():
     expected_to_pass.append(True)
 
     # eval is a red flag
+    # pylint: disable=eval-used
     functions.append(lambda: eval("print('I could be malicious!')"))
     expected_to_pass.append(False)
 
     # body can't be too long
+    # pylint: disable=line-too-long
     functions.append(
-        lambda: "Very long string to make trigger the upper character limit. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores "
+        lambda: "Very long string to trigger the upper character limit. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores"
     )
     expected_to_pass.append(False)
 
@@ -90,6 +92,7 @@ def test_verify_lambda():
     expected_to_pass.append(False)
 
     # numpy is currently not white listed
+    # pylint: disable=unnecessary-lambda
     functions.append(lambda p1: np.cos(p1))
     expected_to_pass.append(False)
 

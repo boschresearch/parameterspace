@@ -40,9 +40,8 @@ class Condition:
     def __repr__(self):
         if not self.all_varnames:
             return "No conditions!"
-        string = "Condition(s) depend(s) on {}.\n".format(
-            self.all_varnames
-        ) + "\n".join(self.function_texts)
+        string = f"Condition(s) depend(s) on {self.all_varnames}.\n"
+        string += "\n".join(self.function_texts)
         return string
 
     def __call__(self, config=None):

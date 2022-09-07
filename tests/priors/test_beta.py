@@ -27,7 +27,7 @@ def test_beta_prior_to_string():
 
     try:
         assert "Beta" in str(p)
-    except:
+    except:  # pylint: disable=bare-except
         assert False
 
 
@@ -40,30 +40,22 @@ def test_beta_prior_sampling(num_samples=64):
     assert np.all(samples <= 1)
 
 
-def test_beta_prior_sampling_deterministic_seed(num_samples=64):
-    p = Beta(a, b)
-    rng = np.random.RandomState(42)
-    samples1 = p.sample(num_samples, random_state=rng)
-    rng.seed(42)
-    samples2 = p.sample(num_samples, random_state=rng)
-
-    assert np.all(samples1 == samples2)
-
-
 def test_beta_prior_pdf_and_likelihood_within_bounds(num_samples=64):
     p = Beta(a, b)
     samples = p.sample(num_samples)
     lls = p.loglikelihood(samples)
 
-    poor_mans_beta = lambda x: np.power(x, a - 1) * np.power(1 - x, b - 1)
+    def _poor_mans_beta(x):
+        return np.power(x, a - 1) * np.power(1 - x, b - 1)
+
     Z = sps.gamma(a) * sps.gamma(b) / sps.gamma(a + b)
-    pdfs = poor_mans_beta(samples) / Z
+    pdfs = _poor_mans_beta(samples) / Z
 
     assert np.allclose(pdfs, p.pdf(samples))
 
     for i, j in itertools.combinations(range(len(lls)), 2):
         ll_diff1 = lls[i] - lls[j]
-        ll_diff2 = np.log(poor_mans_beta(samples[i]) / poor_mans_beta(samples[j]))
+        ll_diff2 = np.log(_poor_mans_beta(samples[i]) / _poor_mans_beta(samples[j]))
 
         assert np.allclose(ll_diff1, ll_diff2, 1e-6)
 

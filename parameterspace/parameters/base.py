@@ -6,7 +6,7 @@
 import abc
 import copy
 import importlib
-from typing import Optional, Union
+from typing import Dict, Optional, Tuple, Union
 
 import numpy as np
 
@@ -55,12 +55,12 @@ class BaseParameter(abc.ABC):
         self._inactive_numerical_value = inactive_numerical_value
         self.transformed_bounds = self._transformation.output_bounds
 
-        assert np.allclose(
-            self._prior.bounds, self.transformed_bounds, 1e-6
-        ), "Missmatch between the prior bounds (%s)" % (
-            self._prior.bounds
-        ) + "and the transformation's bounds (%s)!" % (
-            self.transformed_bounds
+        self._init_args: Tuple
+        self._init_kwargs: Dict
+
+        assert np.allclose(self._prior.bounds, self.transformed_bounds, 1e-6), (
+            f"Missmatch between the prior bounds ({self._prior.bounds})"
+            + f"and the transformation's bounds ({self.transformed_bounds})!"
         )
 
         self.is_continuous = is_continuous
@@ -69,12 +69,12 @@ class BaseParameter(abc.ABC):
 
     def __repr__(self):
         """Basic info about a parameter common to all types."""
-        string = "Name: %s\n" % self.name
-        string += "Type: %s\n" % self.__class__
-        string += "Prior: " + self._prior.__repr__() + "\n"
-        string += "is continuous: %s\n" % self.is_continuous
-        string += "is ordered: %s\n" % self.is_ordered
-        string += "num_values: %s\n" % self.num_values
+        string = f"Name: {self.name}\n"
+        string += f"Type: {self.__class__}\n"
+        string += f"Prior: {self._prior.__repr__()}\n"
+        string += f"is continuous: {self.is_continuous}\n"
+        string += f"is ordered: {self.is_ordered}\n"
+        string += f"num_values: {self.num_values}\n"
         return string
 
     def sample_values(self, num_samples=None, random_state=np.random):
@@ -144,7 +144,7 @@ class BaseParameter(abc.ABC):
             *json_dict["init_args"],
             **json_dict["init_kwargs"],
             transformation=transformation,
-            prior=prior
+            prior=prior,
         )
 
     def to_dict(self):

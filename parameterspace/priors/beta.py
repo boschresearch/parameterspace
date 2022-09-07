@@ -34,7 +34,7 @@ class Beta(BasePrior):
         return self.sps_beta_dist.rvs(size=num_samples, random_state=random_state)
 
     def __repr__(self):
-        return "Beta distribution with parameteres a=%f, b=%f" % (self.a, self.b)
+        return f"Beta distribution with parameters a={self.a}, b={self.b}"
 
     def __eq__(self, other):
         return super().__eq__(other) and np.allclose(

@@ -38,8 +38,8 @@ class TruncatedNormal(BasePrior):
 
     def __repr__(self):
         return (
-            "Truncated normal (Interval [%f, %f]) with parameteres mean=%f, std=%f"
-            % (self.bounds[0], self.bounds[1], self.mean, self.std)
+            f"Truncated normal (Interval [{self.bounds[0]}, {self.bounds[1]}]) with "
+            + f"parameters mean={self.mean}, std={self.std}"
         )
 
     def __eq__(self, other):

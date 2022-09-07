@@ -26,7 +26,7 @@ def test_categorical_prior_to_string():
 
     try:
         assert "Categorical " in str(p)
-    except:
+    except:  # pylint: disable=bare-except
         assert False
 
 
@@ -94,10 +94,9 @@ def test_categorical_prior_pdf_and_likelihood_nans_infs(num_samples=64):
 
 
 def test_categorical_prior_invalid_PRIOR_PROBABILITIES():
-    PRIOR_PROBABILITIES = [1, 2, 1, 3, -5]
-
+    invalid_prior_probabilities = [1, 2, 1, 3, -5]
     with pytest.raises(ValueError):
-        p = Categorical(PRIOR_PROBABILITIES)
+        _ = Categorical(invalid_prior_probabilities)
 
 
 def test_categorical_prior_to_from_dict(num_samples=64):

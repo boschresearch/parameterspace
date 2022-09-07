@@ -10,12 +10,8 @@ import pytest
 import scipy.stats as sps
 
 from parameterspace.parameters.base import BaseParameter
-from parameterspace.parameters.categorical import CategoricalParameter
 from parameterspace.parameters.continuous import ContinuousParameter
-from parameterspace.parameters.integer import IntegerParameter
-from parameterspace.priors.uniform import Uniform
 from parameterspace.transformations.log_zero_one import LogZeroOneFloat
-from parameterspace.transformations.zero_one import ZeroOneFloat, ZeroOneInteger
 
 from .util import check_sampling, check_value_numvalue_conversion, check_values
 
@@ -39,7 +35,7 @@ def test_continuous_parameter(num_samples=2**14):
     check_sampling(p)
 
     samples = p.sample_values(num_samples=num_samples)
-    stat, p_value = sps.kstest(
+    stat, _ = sps.kstest(
         samples, sps.uniform(loc=bounds[0], scale=(bounds[1] - bounds[0])).cdf
     )
     # KS statistic should be less than this value for confidence alpha=0.05
@@ -64,7 +60,7 @@ def test_continuous_log_transform(num_samples=2**14):
     samples = p1.sample_values(num_samples=num_samples)
     # uniform distribution in log space is equivalent to the reciprocal distribution
     # reference: https://en.wikipedia.org/wiki/Reciprocal_distribution
-    stat, p_value = sps.kstest(samples, sps.reciprocal(bounds[0], bounds[1]).cdf)
+    stat, _ = sps.kstest(samples, sps.reciprocal(bounds[0], bounds[1]).cdf)
     # KS statistic should be less than this value for confidence alpha=0.05
     # reference: https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test
     assert stat * np.sqrt(num_samples) < 1.36
@@ -80,7 +76,7 @@ def test_continuous_log_transform(num_samples=2**14):
     samples = p2.sample_values(num_samples=num_samples)
     # uniform distribution in log space is equivalent to the reciprocal distribution
     # reference: https://en.wikipedia.org/wiki/Reciprocal_distribution
-    stat, p_value = sps.kstest(samples, sps.reciprocal(bounds[0], bounds[1]).cdf)
+    stat, _ = sps.kstest(samples, sps.reciprocal(bounds[0], bounds[1]).cdf)
     # KS statistic should be less than this value for confidence alpha=0.05
     # reference: https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test
     assert stat * np.sqrt(num_samples) < 1.36
