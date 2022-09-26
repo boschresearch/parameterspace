@@ -87,3 +87,16 @@ def test_integer_uniformity(num_samples=2**14):
     res = sps.chisquare(counts2)
     chi2 = sps.chi2(num_values2 - 1)
     assert chi2.cdf(res.statistic) < 0.95
+
+
+def test_inifite_bound_raises_error():
+    error_message_match = "finite"
+
+    with pytest.raises(ValueError, match=error_message_match):
+        IntegerParameter("bar", (float("-inf"), 10))
+
+    with pytest.raises(ValueError, match=error_message_match):
+        IntegerParameter("bar", (10, float("inf")))
+
+    with pytest.raises(ValueError, match=error_message_match):
+        IntegerParameter("bar", (float("-inf"), float("inf")))
