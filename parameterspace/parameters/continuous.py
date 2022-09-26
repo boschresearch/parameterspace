@@ -2,7 +2,6 @@
 # NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
 #
 # SPDX-License-Identifier: Apache-2.0
-from cmath import isfinite
 from typing import Optional, Tuple, Union
 
 import numpy as np
