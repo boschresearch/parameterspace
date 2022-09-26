@@ -42,6 +42,9 @@ class IntegerParameter(BaseParameter):
             inactive_numerical_value: Placeholder value for this parameter in case it
                 is not active.
         """
+        if not np.isfinite(bounds).all():
+            raise ValueError(f"Bounds need to be finite, but are {bounds}")
+
         self.bounds = np.array(bounds, dtype=int)
 
         if not isinstance(transformation, BaseTransformation):

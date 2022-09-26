@@ -2,6 +2,7 @@
 # NOTICE file and/or the repository https://github.com/boschresearch/parameterspace
 #
 # SPDX-License-Identifier: Apache-2.0
+from cmath import isfinite
 from typing import Optional, Tuple, Union
 
 import numpy as np
@@ -42,6 +43,9 @@ class ContinuousParameter(BaseParameter):
             inactive_numerical_value:  Placeholder value for this parameter in case
                 it is not active.
         """
+        if not np.isfinite(bounds).all():
+            raise ValueError(f"Bounds need to be finite, but are {bounds}")
+
         self.bounds = np.array(bounds)
 
         if not isinstance(transformation, BaseTransformation):
