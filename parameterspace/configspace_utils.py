@@ -21,12 +21,18 @@ def _get_condition(conditions: List[dict], parameter_name: str) -> Optional[Cond
     function_texts = []
     for cond in conditions:
         if cond["child"] == parameter_name:
-            if cond["type"] != "IN":
-                raise NotImplementedError()
-
             parent = _escape_parameter_name(cond["parent"])
             varnames.append(parent)
-            function_texts.append(f"{parent} in {cond['values']}")
+            # The representation is used because it quotes strings.
+            if cond["type"] == "IN":
+                # Using the valid Python "a in [2,3,4]" is not supported, hence use or
+                function_texts.append(
+                    " or ".join([f"{parent} == {v.__repr__()}" for v in cond["values"]])
+                )
+            elif cond["type"] == "EQ":
+                function_texts.append(f"{parent} == {cond['value'].__repr__()}")
+            else:
+                raise NotImplementedError(f"Unsupported condition type {cond['type']}")
 
     if not varnames:
         return condition
