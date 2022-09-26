@@ -80,3 +80,16 @@ def test_continuous_log_transform(num_samples=2**14):
     # KS statistic should be less than this value for confidence alpha=0.05
     # reference: https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test
     assert stat * np.sqrt(num_samples) < 1.36
+
+
+def test_inifite_bound_raises_error():
+    error_message_match = "finite"
+
+    with pytest.raises(ValueError, match=error_message_match):
+        ContinuousParameter("bar", (float("-inf"), 10.0))
+
+    with pytest.raises(ValueError, match=error_message_match):
+        ContinuousParameter("bar", (10.0, float("inf")))
+
+    with pytest.raises(ValueError, match=error_message_match):
+        ContinuousParameter("bar", (float("-inf"), float("inf")))
