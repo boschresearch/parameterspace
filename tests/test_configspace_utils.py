@@ -3,10 +3,13 @@ import json
 import numpy as np
 
 from parameterspace.configspace_utils import parameterspace_from_configspace_dict
+from parameterspace.priors.categorical import Categorical as CategoricalPrior
 from parameterspace.transformations.log_zero_one import (
     LogZeroOneInteger as LogZeroOneIntegerTransformation,
 )
-from parameterspace.priors.categorical import Categorical as CategoricalPrior
+from parameterspace.priors.truncated_normal import (
+    TruncatedNormal as TruncatedNormalPrior,
+)
 
 CS_CONDITIONS_JSON = """{
   "hyperparameters": [
@@ -93,34 +96,6 @@ CS_CONDITIONS_JSON = """{
 }"""
 
 
-CS_WEIGHTED_CATEGORICAL_JSON = """
-{
-  "name": "myspace",
-  "hyperparameters": [
-    {
-      "name": "c",
-      "type": "categorical",
-      "choices": [
-        "red",
-        "green",
-        "blue"
-      ],
-      "default": "blue",
-      "weights": [
-        2,
-        1,
-        1
-      ]
-    }
-  ],
-  "conditions": [],
-  "forbiddens": [],
-  "python_module_version": "0.6.0",
-  "json_format_version": 0.4
-}
-"""
-
-
 def test_parameterspace_from_configspace_with_conditions_and_log_transform():
     cs_dict = json.loads(CS_CONDITIONS_JSON)
     space = parameterspace_from_configspace_dict(cs_dict)
@@ -159,12 +134,63 @@ def test_parameterspace_from_configspace_with_conditions_and_log_transform():
     assert space._parameters["booster"]["parameter"].values == booster["choices"]
 
 
-def test_parameterspace_from_configspace_with_priors():
-    assert False
+def test_parameterspace_from_configspace_with_normal_prior():
+    cs_dict = json.loads(
+        """{
+          "name": "myspace",
+          "hyperparameters": [
+            {
+              "name": "p",
+              "type": "normal_float",
+              "log": true,
+              "mu": 1.0,
+              "sigma": 10.0,
+              "default": 2.718281828459045
+            }
+          ],
+          "conditions": [],
+          "forbiddens": [],
+          "python_module_version": "0.6.0",
+          "json_format_version": 0.4
+        }
+        """
+    )
+    space = parameterspace_from_configspace_dict(cs_dict)
+    assert len(space) == 1
+
+    param = space.get_parameter_by_name("p")["parameter"]
+    assert isinstance(param._prior, TruncatedNormalPrior)
+    assert param._prior.mean == cs_dict["hyperparameters"][0]["mu"]
+    assert param._prior.std == cs_dict["hyperparameters"][0]["sigma"]
 
 
 def test_parameterspace_from_configspace_for_categorical_with_custom_probabilities():
-    cs_dict = json.loads(CS_WEIGHTED_CATEGORICAL_JSON)
+    cs_dict = json.loads(
+        """{
+          "name": "myspace",
+          "hyperparameters": [
+            {
+              "name": "c",
+              "type": "categorical",
+              "choices": [
+                "red",
+                "green",
+                "blue"
+              ],
+              "default": "blue",
+              "weights": [
+                2,
+                1,
+                1
+              ]
+            }
+          ],
+          "conditions": [],
+          "forbiddens": [],
+          "python_module_version": "0.6.0",
+          "json_format_version": 0.4
+        }"""
+    )
     space = parameterspace_from_configspace_dict(cs_dict)
     assert len(space) == 1
 
