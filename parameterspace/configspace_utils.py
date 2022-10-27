@@ -72,6 +72,7 @@ def parameterspace_from_configspace_dict(configspace_dict: dict) -> ps.Parameter
                 "parameter": ps.CategoricalParameter(
                     name=param_name,
                     values=param_dict["choices"],
+                    prior=param_dict.get("weights", None),
                 ),
                 "condition": condition,
             }

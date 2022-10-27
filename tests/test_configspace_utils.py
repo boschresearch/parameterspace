@@ -1,9 +1,12 @@
 import json
 
+import numpy as np
+
 from parameterspace.configspace_utils import parameterspace_from_configspace_dict
 from parameterspace.transformations.log_zero_one import (
     LogZeroOneInteger as LogZeroOneIntegerTransformation,
 )
+from parameterspace.priors.categorical import Categorical as CategoricalPrior
 
 CS_CONDITIONS_JSON = """{
   "hyperparameters": [
@@ -90,7 +93,35 @@ CS_CONDITIONS_JSON = """{
 }"""
 
 
-def test_parameterspace_from_configspace_with_conditions():
+CS_WEIGHTED_CATEGORICAL_JSON = """
+{
+  "name": "myspace",
+  "hyperparameters": [
+    {
+      "name": "c",
+      "type": "categorical",
+      "choices": [
+        "red",
+        "green",
+        "blue"
+      ],
+      "default": "blue",
+      "weights": [
+        2,
+        1,
+        1
+      ]
+    }
+  ],
+  "conditions": [],
+  "forbiddens": [],
+  "python_module_version": "0.6.0",
+  "json_format_version": 0.4
+}
+"""
+
+
+def test_parameterspace_from_configspace_with_conditions_and_log_transform():
     cs_dict = json.loads(CS_CONDITIONS_JSON)
     space = parameterspace_from_configspace_dict(cs_dict)
     assert len(space) == 7
@@ -110,6 +141,14 @@ def test_parameterspace_from_configspace_with_conditions():
         LogZeroOneIntegerTransformation,
     )
 
+    _s = space.copy()
+    _s.fix(booster="dart")
+    assert len(_s.sample()) == 7
+
+    _s = space.copy()
+    _s.fix(booster="gblinear")
+    assert len(_s.sample()) == 5
+
     alpha = cs_dict["hyperparameters"][0]
     assert alpha["name"] == "alpha"
     bounds = [alpha["lower"], alpha["upper"]]
@@ -119,14 +158,19 @@ def test_parameterspace_from_configspace_with_conditions():
     assert booster["name"] == "booster"
     assert space._parameters["booster"]["parameter"].values == booster["choices"]
 
-    _s = space.copy()
-    _s.fix(booster="dart")
-    assert len(_s.sample()) == 7
-
-    _s = space.copy()
-    _s.fix(booster="gblinear")
-    assert len(_s.sample()) == 5
-
 
 def test_parameterspace_from_configspace_with_priors():
     assert False
+
+
+def test_parameterspace_from_configspace_for_categorical_with_custom_probabilities():
+    cs_dict = json.loads(CS_WEIGHTED_CATEGORICAL_JSON)
+    space = parameterspace_from_configspace_dict(cs_dict)
+    assert len(space) == 1
+
+    param = space.get_parameter_by_name("c")["parameter"]
+    assert isinstance(param._prior, CategoricalPrior)
+    reference_weights = np.array(cs_dict["hyperparameters"][0]["weights"])
+    assert np.all(
+        param._prior.probabilities == reference_weights / reference_weights.sum()
+    )
