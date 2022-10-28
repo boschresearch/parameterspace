@@ -27,10 +27,10 @@ def _get_condition(conditions: List[dict], parameter_name: str) -> Optional[Cond
             if cond["type"] == "IN":
                 # Using the valid Python "a in [2,3,4]" is not supported, hence use or
                 function_texts.append(
-                    " or ".join([f"{parent} == {v.__repr__()}" for v in cond["values"]])
+                    " or ".join([f"{parent} == {repr(v)}" for v in cond["values"]])
                 )
             elif cond["type"] == "EQ":
-                function_texts.append(f"{parent} == {cond['value'].__repr__()}")
+                function_texts.append(f"{parent} == {repr(cond['value'])}")
             else:
                 raise NotImplementedError(f"Unsupported condition type {cond['type']}")
 

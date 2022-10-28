@@ -4,11 +4,11 @@ import numpy as np
 
 from parameterspace.configspace_utils import parameterspace_from_configspace_dict
 from parameterspace.priors.categorical import Categorical as CategoricalPrior
-from parameterspace.transformations.log_zero_one import (
-    LogZeroOneInteger as LogZeroOneIntegerTransformation,
-)
 from parameterspace.priors.truncated_normal import (
     TruncatedNormal as TruncatedNormalPrior,
+)
+from parameterspace.transformations.log_zero_one import (
+    LogZeroOneInteger as LogZeroOneIntegerTransformation,
 )
 
 CS_CONDITIONS_JSON = """{
