@@ -78,7 +78,6 @@ def parameterspace_from_configspace_dict(configspace_dict: dict) -> ps.Parameter
             }
 
         elif param_dict["type"] == "constant":
-            # FIXME: Is there a better alternative to a constant than a one choice cat?
             space._parameters[param_name] = {
                 "parameter": ps.CategoricalParameter(
                     name=param_name,
@@ -86,6 +85,7 @@ def parameterspace_from_configspace_dict(configspace_dict: dict) -> ps.Parameter
                 ),
                 "condition": condition,
             }
+            space.fix(**{param_name: param_dict["value"]})
 
         elif param_dict["type"] == "normal_float":
             lower_bound = param_dict["mu"] - 4 * param_dict["sigma"]
