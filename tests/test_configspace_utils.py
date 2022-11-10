@@ -142,10 +142,10 @@ def test_parameterspace_from_configspace_with_normal_prior():
             {
               "name": "p",
               "type": "normal_float",
-              "log": true,
+              "log": false,
               "mu": 1.0,
               "sigma": 10.0,
-              "default": 2.718281828459045
+              "default": 2.7
             }
           ],
           "conditions": [],
@@ -160,8 +160,41 @@ def test_parameterspace_from_configspace_with_normal_prior():
 
     param = space.get_parameter_by_name("p")["parameter"]
     assert isinstance(param._prior, TruncatedNormalPrior)
-    assert param._prior.mean == cs_dict["hyperparameters"][0]["mu"]
-    assert param._prior.std == cs_dict["hyperparameters"][0]["sigma"]
+
+    samples = np.array([space.sample()["p"] for _ in range(200_000)])
+    assert abs(samples.mean() - cs_dict["hyperparameters"][0]["mu"]) < 0.05
+    assert abs(samples.std() - cs_dict["hyperparameters"][0]["sigma"]) < 0.05
+
+
+def test_parameterspace_from_configspace_with_log_normal_prior():
+    cs_dict = json.loads(
+        """{
+          "name": "myspace",
+          "hyperparameters": [
+            {
+              "name": "p",
+              "type": "normal_float",
+              "log": true,
+              "mu": 1.0,
+              "sigma": 10.0,
+              "default": 2.7
+            }
+          ],
+          "conditions": [],
+          "forbiddens": [],
+          "python_module_version": "0.6.0",
+          "json_format_version": 0.4
+        }
+        """
+    )
+    space = parameterspace_from_configspace_dict(cs_dict)
+    assert len(space) == 1
+
+    param = space.get_parameter_by_name("p")["parameter"]
+    assert isinstance(param._prior, TruncatedNormalPrior)
+
+    samples = np.array([space.sample()["p"] for _ in range(200_000)])
+    assert abs(samples.mean() - np.log(cs_dict["hyperparameters"][0]["mu"])) < 0.05
 
 
 def test_parameterspace_from_configspace_for_categorical_with_custom_probabilities():

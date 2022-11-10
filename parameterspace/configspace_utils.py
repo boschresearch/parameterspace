@@ -97,9 +97,7 @@ def parameterspace_from_configspace_dict(configspace_dict: dict) -> ps.Parameter
                 "parameter": ps.ContinuousParameter(
                     name=param_name,
                     bounds=(lower_bound, upper_bound),
-                    prior=ps.priors.TruncatedNormal(
-                        mean=param_dict["mu"], std=param_dict["sigma"]
-                    ),
+                    prior=ps.priors.TruncatedNormal(mean=0.5, std=1.0 / 8.0),
                     transformation="log" if param_dict["log"] else None,
                 ),
                 "condition": condition,
