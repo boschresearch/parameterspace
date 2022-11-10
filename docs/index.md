@@ -25,3 +25,22 @@ The package can be installed from [PyPi](https://pypi.org/project/parameterspace
 ```bash
 pip install parameterspace
 ```
+
+## ConfigSpace Compatibility
+
+In case you are used to working with
+[ConfigSpace](https://github.com/automl/ConfigSpace/) or for other reasons have space
+definitions in the `ConfigSpace` format around, you can convert them into
+`ParameterSpace` instances with ease.
+Just note that any colons `:` in the `ConfigSpace` parameter names will be converted to
+underscores `_`.
+
+```python
+import json
+from parameterspace.configspace_utils import parameterspace_from_configspace_dict
+
+with open("config_space.json", "r") as fh:
+  cs = json.load(fh)
+
+ps = parameterspace_from_configspace_dict(cs)
+```
