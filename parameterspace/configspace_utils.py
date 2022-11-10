@@ -8,6 +8,10 @@ from parameterspace.utils import verify_lambda
 
 
 def _escape_parameter_name(name: str) -> str:
+    """Replace colons with underscores.
+
+    Colons are incompatible as ParameterSpace parameter names.
+    """
     return name.replace(":", "_")
 
 
