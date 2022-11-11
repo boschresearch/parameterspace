@@ -84,7 +84,7 @@ def parameterspace_from_configspace_dict(configspace_dict: dict) -> ps.Parameter
                 "condition": condition,
             }
 
-        elif param_dict["type"] == "constant":
+        elif param_dict["type"] in ["constant", "unparametrized"]:
             space._parameters[param_name] = {
                 "parameter": ps.CategoricalParameter(
                     name=param_name,
@@ -94,14 +94,20 @@ def parameterspace_from_configspace_dict(configspace_dict: dict) -> ps.Parameter
             }
             space.fix(**{param_name: param_dict["value"]})
 
-        elif param_dict["type"] == "normal_float":
+        elif param_dict["type"] in ["normal_float", "normal_int"]:
             lower_bound = param_dict["mu"] - 4 * param_dict["sigma"]
             upper_bound = param_dict["mu"] + 4 * param_dict["sigma"]
             if param_dict["log"]:
                 lower_bound = max(lower_bound, 1e-24)
 
+            parameter_class = (
+                ps.ContinuousParameter
+                if param_dict["type"] == "normal_float"
+                else ps.IntegerParameter
+            )
+
             space._parameters[param_name] = {
-                "parameter": ps.ContinuousParameter(
+                "parameter": parameter_class(
                     name=param_name,
                     bounds=(lower_bound, upper_bound),
                     prior=ps.priors.TruncatedNormal(mean=0.5, std=1.0 / 8.0),

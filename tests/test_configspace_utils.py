@@ -147,7 +147,7 @@ def test_conditions_and_log_transform():
     assert space._parameters["booster"]["parameter"].values == booster["choices"]
 
 
-def test_normal_prior():
+def test_continuous_with_normal_prior():
     cs_dict = json.loads(
         """{
           "name": "myspace",
@@ -179,7 +179,7 @@ def test_normal_prior():
     assert abs(samples.std() - cs_dict["hyperparameters"][0]["sigma"]) < 0.05
 
 
-def test_log_normal_prior():
+def test_continuous_with_log_normal_prior():
     cs_dict = json.loads(
         """{
           "name": "myspace",
@@ -208,6 +208,38 @@ def test_log_normal_prior():
 
     samples = np.array([space.sample()["p"] for _ in range(200_000)])
     assert abs(samples.mean() - np.log(cs_dict["hyperparameters"][0]["mu"])) < 0.05
+
+
+def test_integer_with_normal_prior():
+    cs_dict = json.loads(
+        """{
+          "name": "myspace",
+          "hyperparameters": [
+            {
+              "name": "p",
+              "type": "normal_int",
+              "log": false,
+              "mu": 1.0,
+              "sigma": 5.0,
+              "default": 2
+            }
+          ],
+          "conditions": [],
+          "forbiddens": [],
+          "python_module_version": "0.6.0",
+          "json_format_version": 0.4
+        }
+        """
+    )
+    space = parameterspace_from_configspace_dict(cs_dict)
+    assert len(space) == 1
+
+    param = space.get_parameter_by_name("p")["parameter"]
+    assert isinstance(param._prior, TruncatedNormalPrior)
+
+    samples = np.array([space.sample()["p"] for _ in range(10_000)])
+    assert abs(samples.mean() - cs_dict["hyperparameters"][0]["mu"]) < 0.1
+    assert abs(samples.std() - cs_dict["hyperparameters"][0]["sigma"]) < 0.5
 
 
 def test_categorical_with_custom_probabilities():
