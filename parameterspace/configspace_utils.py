@@ -2,6 +2,8 @@
 
 from typing import List, Optional
 
+import numpy as np
+
 import parameterspace as ps
 from parameterspace.condition import Condition
 from parameterspace.utils import verify_lambda
@@ -95,10 +97,20 @@ def parameterspace_from_configspace_dict(configspace_dict: dict) -> ps.Parameter
             space.fix(**{param_name: param_dict["value"]})
 
         elif param_dict["type"] in ["normal_float", "normal_int"]:
-            lower_bound = param_dict["mu"] - 4 * param_dict["sigma"]
-            upper_bound = param_dict["mu"] + 4 * param_dict["sigma"]
-            if param_dict["log"]:
-                lower_bound = max(lower_bound, 1e-24)
+            if (
+                param_dict.get("lower", None) is None
+                or param_dict.get("upper", None) is None
+            ):
+                if param_dict["log"]:
+                    raise ValueError(
+                        "Please provide bounds, when using a log transform with a "
+                        + "normal prior."
+                    )
+
+                lower_bound = param_dict["mu"] - 4 * param_dict["sigma"]
+                upper_bound = param_dict["mu"] + 4 * param_dict["sigma"]
+            else:
+                lower_bound, upper_bound = param_dict["lower"], param_dict["upper"]
 
             parameter_class = (
                 ps.ContinuousParameter
@@ -106,11 +118,21 @@ def parameterspace_from_configspace_dict(configspace_dict: dict) -> ps.Parameter
                 else ps.IntegerParameter
             )
 
+            if param_dict["log"]:
+                log_upper, log_lower = np.log(upper_bound), np.log(lower_bound)
+                log_interval_size = log_upper - log_lower
+                mean = (param_dict["mu"] - log_lower) / log_interval_size
+                std = param_dict["sigma"] / log_interval_size
+            else:
+                interval_size = upper_bound - lower_bound
+                mean = (param_dict["mu"] - lower_bound) / interval_size
+                std = param_dict["sigma"] / interval_size
+
             space._parameters[param_name] = {
                 "parameter": parameter_class(
                     name=param_name,
                     bounds=(lower_bound, upper_bound),
-                    prior=ps.priors.TruncatedNormal(mean=0.5, std=1.0 / 8.0),
+                    prior=ps.priors.TruncatedNormal(mean=mean, std=std),
                     transformation="log" if param_dict["log"] else None,
                 ),
                 "condition": condition,

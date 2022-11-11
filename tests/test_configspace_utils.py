@@ -1,5 +1,6 @@
 import json
 
+import pytest
 import numpy as np
 from ConfigSpace import (
     ConfigurationSpace,
@@ -8,8 +9,11 @@ from ConfigSpace import (
     LessThanCondition,
     GreaterThanCondition,
     InCondition,
+    Float,
+    Normal,
 )
 from ConfigSpace.read_and_write import json as cs_json
+from scipy.stats import truncnorm as scipy_truncnorm
 
 from parameterspace.configspace_utils import parameterspace_from_configspace_dict
 from parameterspace.priors.categorical import Categorical as CategoricalPrior
@@ -156,9 +160,9 @@ def test_continuous_with_normal_prior():
               "name": "p",
               "type": "normal_float",
               "log": false,
-              "mu": 1.0,
+              "mu": 8.0,
               "sigma": 10.0,
-              "default": 2.7
+              "default": 6.2
             }
           ],
           "conditions": [],
@@ -174,30 +178,49 @@ def test_continuous_with_normal_prior():
     param = space.get_parameter_by_name("p")["parameter"]
     assert isinstance(param._prior, TruncatedNormalPrior)
 
-    samples = np.array([space.sample()["p"] for _ in range(200_000)])
-    assert abs(samples.mean() - cs_dict["hyperparameters"][0]["mu"]) < 0.05
-    assert abs(samples.std() - cs_dict["hyperparameters"][0]["sigma"]) < 0.05
+    samples = np.array([space.sample()["p"] for _ in range(10_000)])
+    assert abs(samples.mean() - cs_dict["hyperparameters"][0]["mu"]) < 0.1
+    assert abs(samples.std() - cs_dict["hyperparameters"][0]["sigma"]) < 0.2
+
+
+def test_continuous_with_log_normal_prior_and_no_bounds_raises():
+    cs = ConfigurationSpace(
+        space={
+            "p": Float(
+                "p",
+                default=0.1,
+                log=True,
+                distribution=Normal(1.0, 0.6),
+            ),
+        },
+    )
+    with pytest.raises(ValueError):
+        parameterspace_from_configspace_dict(_cs_to_dict(cs))
 
 
 def test_continuous_with_log_normal_prior():
+    mu = 1.0
+    sigma = 0.6
     cs_dict = json.loads(
-        """{
+        f"""{{
           "name": "myspace",
           "hyperparameters": [
-            {
+            {{
               "name": "p",
               "type": "normal_float",
+              "lower": 1e-5,
+              "upper": 1e-1,
               "log": true,
-              "mu": 1.0,
-              "sigma": 10.0,
-              "default": 2.7
-            }
+              "mu": {mu},
+              "sigma": {sigma},
+              "default": 1.1
+            }}
           ],
           "conditions": [],
           "forbiddens": [],
           "python_module_version": "0.6.0",
           "json_format_version": 0.4
-        }
+        }}
         """
     )
     space = parameterspace_from_configspace_dict(cs_dict)
@@ -206,8 +229,14 @@ def test_continuous_with_log_normal_prior():
     param = space.get_parameter_by_name("p")["parameter"]
     assert isinstance(param._prior, TruncatedNormalPrior)
 
-    samples = np.array([space.sample()["p"] for _ in range(200_000)])
-    assert abs(samples.mean() - np.log(cs_dict["hyperparameters"][0]["mu"])) < 0.05
+    samples = np.array([space.sample()["p"] for _ in range(10_000)])
+
+    a, b = (np.log(param.bounds) - mu) / sigma
+    expected_mean = scipy_truncnorm.stats(a, b, loc=mu, scale=sigma, moments="m")
+    assert abs(np.log(samples).mean() - expected_mean) < 0.1
+
+    expected_var = scipy_truncnorm.stats(a, b, loc=mu, scale=sigma, moments="v")
+    assert abs(np.log(samples).var() - expected_var) < 0.1
 
 
 def test_integer_with_normal_prior():
@@ -219,7 +248,7 @@ def test_integer_with_normal_prior():
               "name": "p",
               "type": "normal_int",
               "log": false,
-              "mu": 1.0,
+              "mu": 8.0,
               "sigma": 5.0,
               "default": 2
             }
@@ -238,8 +267,9 @@ def test_integer_with_normal_prior():
     assert isinstance(param._prior, TruncatedNormalPrior)
 
     samples = np.array([space.sample()["p"] for _ in range(10_000)])
+
     assert abs(samples.mean() - cs_dict["hyperparameters"][0]["mu"]) < 0.1
-    assert abs(samples.std() - cs_dict["hyperparameters"][0]["sigma"]) < 0.5
+    assert abs(samples.std() - cs_dict["hyperparameters"][0]["sigma"]) < 0.3
 
 
 def test_categorical_with_custom_probabilities():
