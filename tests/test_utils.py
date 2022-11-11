@@ -44,63 +44,53 @@ def test_extract_lambda_information():
         assert body == expected_body
 
 
-def test_verify_lambda():
+@pytest.mark.parametrize(
+    "label,function,expected_to_pass",
+    [
+        ("squared", (lambda p1, p2: p1**2 + p2**2 < 1), True),
+        ("math", (lambda p1, p2: math.sin(p1 + p2)), True),
+        # string expressions should be ok
+        ("string", (lambda p1: p1 == "foo"), True),
+        # tuple member check should be ok
+        ("tuple member", (lambda p1: p1 in ("a", "b")), True),
+        # logic operators should work too
+        ("logic", (lambda p1, p2: p1 == 1 or not p2 == 1 and p1 != p2), True),
+        # Uneven single quotes should work
+        ("uneven single", (lambda p1: p1 == "a single ' is okay"), True),
+        # Uneven double quotes should work
+        ("uneven double", (lambda p1: p1 == 'a single " is okay'), True),
+        # eval is a red flag
+        # pylint: disable=eval-used
+        ("eval", (lambda: eval("print('I could be malicious!')")), False),
+        # body can't be too long
+        # pylint: disable=line-too-long
+        (
+            "long body",
+            lambda: (
+                "Very long string to trigger the upper character limit. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores"
+            ),
+            False,
+        ),
+        # backslash is a forbidden character
+        ("backslash", (lambda: print("\\")), False),
+        # numpy is currently not allowed
+        # pylint: disable=unnecessary-lambda
+        ("numpy", (lambda p1: np.cos(p1)), False),
+    ],
+)
+def test_verify_lambda(label, function, expected_to_pass):
     """Test verification of some example lambda functions
 
     See comment in `test_extract_lambda_information` above.
+    The `label` argument is mainly intended to improve readability of sub-test names.
     """
 
-    functions = []
-    expected_to_pass = []
-
-    functions.append(lambda p1, p2: p1**2 + p2**2 < 1)
-    expected_to_pass.append(True)
-
-    functions.append(lambda p1, p2: math.sin(p1 + p2))
-    expected_to_pass.append(True)
-
-    # string expressions should be ok
-    functions.append(lambda p1, p2: p1 == "foo")
-    expected_to_pass.append(True)
-
-    # logic operators should work too
-    functions.append(lambda p1, p2: p1 == 1 or not p2 == 1 and p1 != p2)
-    expected_to_pass.append(True)
-
-    # Uneven single quotes should work
-    functions.append(lambda p1: p1 == "a single ' is okay")
-    expected_to_pass.append(True)
-
-    # Uneven double quotes should work
-    functions.append(lambda p1: p1 == 'a single " is okay')
-    expected_to_pass.append(True)
-
-    # eval is a red flag
-    # pylint: disable=eval-used
-    functions.append(lambda: eval("print('I could be malicious!')"))
-    expected_to_pass.append(False)
-
-    # body can't be too long
-    # pylint: disable=line-too-long
-    functions.append(
-        lambda: "Very long string to trigger the upper character limit. Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores"
+    variables, body = utils.extract_lambda_information(
+        inspect.getsourcelines(function)[0]
     )
-    expected_to_pass.append(False)
-
-    # backslash is a blacklisted character
-    functions.append(lambda: print("\\"))
-    expected_to_pass.append(False)
-
-    # numpy is currently not white listed
-    # pylint: disable=unnecessary-lambda
-    functions.append(lambda p1: np.cos(p1))
-    expected_to_pass.append(False)
-
-    for lambda_fn, pass_expected in zip(functions, expected_to_pass):
-        variables, body = utils.extract_lambda_information(
-            inspect.getsourcelines(lambda_fn)[0]
-        )
-        assert pass_expected == utils.verify_lambda(variables, body)
+    assert expected_to_pass == utils.verify_lambda(
+        variables, body
+    ), f"{label} expected {expected_to_pass}"
 
 
 if __name__ == "__main__":

@@ -6,7 +6,7 @@
 import os
 import re
 from functools import wraps
-from typing import Callable, Iterable, Tuple
+from typing import Callable, Iterable, List, Tuple
 
 import numpy as np
 
@@ -75,15 +75,15 @@ def extract_lambda_information(source_lines: Iterable) -> Tuple[list, str]:
     return variables, body.strip().rstrip(",")
 
 
-def verify_lambda(variables: list, body: str) -> bool:
+def verify_lambda(variables: List[str], body: str) -> bool:
     """Check serialized lambda expression for malicious code.
 
     Args:
-        variables: [description]
-        body: [description]
+        variables: List of the variable names used in the function body.
+        body: Function body string representation to check for allowed expressions.
 
     Returns:
-        [description]
+        True if the function body is considered safe.
     """
 
     if len(body) > 200:
@@ -92,14 +92,14 @@ def verify_lambda(variables: list, body: str) -> bool:
     if "eval(" in body:
         return False
 
-    blacklisted_characters = "\\;"
+    forbidden_characters = "\\;"
 
-    for c in blacklisted_characters:
+    for c in forbidden_characters:
         if c in body:
             return False
 
-    white_listed_chars = ".0123456789+-*/()<=!> "
-    white_listed_functions = [
+    allowed_characters = ".,0123456789+-*/()<=!> "
+    allowed_functions = [
         "math.sin",
         "math.cos",
         "math.exp",
@@ -107,15 +107,16 @@ def verify_lambda(variables: list, body: str) -> bool:
         "or",
         "and",
         "not",
+        "in",
     ]
 
     for vn in variables:
         body = body.replace(vn, "")
 
-    for fn in white_listed_functions:
+    for fn in allowed_functions:
         body = body.replace(fn, "")
 
-    for c in white_listed_chars:
+    for c in allowed_characters:
         body = body.replace(c, "")
 
     # remove all single quoted strings
