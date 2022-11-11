@@ -51,6 +51,8 @@ def test_extract_lambda_information():
         ("math", (lambda p1, p2: math.sin(p1 + p2)), True),
         # string expressions should be ok
         ("string", (lambda p1: p1 == "foo"), True),
+        # tuple member check should be ok
+        ("tuple member", (lambda p1: p1 in ("a", "b")), True),
         # logic operators should work too
         ("logic", (lambda p1, p2: p1 == 1 or not p2 == 1 and p1 != p2), True),
         # Uneven single quotes should work

@@ -98,7 +98,7 @@ def verify_lambda(variables: List[str], body: str) -> bool:
         if c in body:
             return False
 
-    allowed_characters = ".0123456789+-*/()<=!> "
+    allowed_characters = ".,0123456789+-*/()<=!> "
     allowed_functions = [
         "math.sin",
         "math.cos",
@@ -107,6 +107,7 @@ def verify_lambda(variables: List[str], body: str) -> bool:
         "or",
         "and",
         "not",
+        "in",
     ]
 
     for vn in variables:
