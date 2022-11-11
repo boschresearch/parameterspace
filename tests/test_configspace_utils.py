@@ -1,6 +1,15 @@
 import json
 
 import numpy as np
+from ConfigSpace import (
+    ConfigurationSpace,
+    EqualsCondition,
+    NotEqualsCondition,
+    LessThanCondition,
+    GreaterThanCondition,
+    InCondition,
+)
+from ConfigSpace.read_and_write import json as cs_json
 
 from parameterspace.configspace_utils import parameterspace_from_configspace_dict
 from parameterspace.priors.categorical import Categorical as CategoricalPrior
@@ -96,7 +105,11 @@ CS_CONDITIONS_JSON = """{
 }"""
 
 
-def test_parameterspace_from_configspace_with_conditions_and_log_transform():
+def _cs_to_dict(cs: ConfigurationSpace) -> dict:
+    return json.loads(cs_json.write(cs))
+
+
+def test_conditions_and_log_transform():
     cs_dict = json.loads(CS_CONDITIONS_JSON)
     space = parameterspace_from_configspace_dict(cs_dict)
     assert len(space) == 7
@@ -134,7 +147,7 @@ def test_parameterspace_from_configspace_with_conditions_and_log_transform():
     assert space._parameters["booster"]["parameter"].values == booster["choices"]
 
 
-def test_parameterspace_from_configspace_with_normal_prior():
+def test_normal_prior():
     cs_dict = json.loads(
         """{
           "name": "myspace",
@@ -166,7 +179,7 @@ def test_parameterspace_from_configspace_with_normal_prior():
     assert abs(samples.std() - cs_dict["hyperparameters"][0]["sigma"]) < 0.05
 
 
-def test_parameterspace_from_configspace_with_log_normal_prior():
+def test_log_normal_prior():
     cs_dict = json.loads(
         """{
           "name": "myspace",
@@ -197,7 +210,7 @@ def test_parameterspace_from_configspace_with_log_normal_prior():
     assert abs(samples.mean() - np.log(cs_dict["hyperparameters"][0]["mu"])) < 0.05
 
 
-def test_parameterspace_from_configspace_for_categorical_with_custom_probabilities():
+def test_categorical_with_custom_probabilities():
     cs_dict = json.loads(
         """{
           "name": "myspace",
@@ -233,3 +246,88 @@ def test_parameterspace_from_configspace_for_categorical_with_custom_probabiliti
     assert np.all(
         param._prior.probabilities == reference_weights / reference_weights.sum()
     )
+
+
+def test_equals_condition():
+    cs = ConfigurationSpace({"a": [1, 2, 3], "b": (1.0, 8.0)})
+    cond = EqualsCondition(cs["b"], cs["a"], 1)
+    cs.add_condition(cond)
+
+    space = parameterspace_from_configspace_dict(_cs_to_dict(cs))
+    assert len(space) == 2
+
+    _s = space.copy()
+    _s.fix(a=1)
+    assert len(_s.sample()) == 2
+
+    _s = space.copy()
+    _s.fix(a=2)
+    assert len(_s.sample()) == 1
+
+
+def test_not_equals_condition():
+    cs = ConfigurationSpace({"a": [1, 2, 3], "b": (1.0, 8.0)})
+    cond = NotEqualsCondition(cs["b"], cs["a"], 1)
+    cs.add_condition(cond)
+
+    space = parameterspace_from_configspace_dict(_cs_to_dict(cs))
+    assert len(space) == 2
+
+    _s = space.copy()
+    _s.fix(a=2)
+    assert len(_s.sample()) == 2
+
+    _s = space.copy()
+    _s.fix(a=1)
+    assert len(_s.sample()) == 1
+
+
+def test_less_than_condition():
+    cs = ConfigurationSpace({"a": (0, 10), "b": (1.0, 8.0)})
+    cond = LessThanCondition(cs["b"], cs["a"], 5)
+    cs.add_condition(cond)
+
+    space = parameterspace_from_configspace_dict(_cs_to_dict(cs))
+    assert len(space) == 2
+
+    _s = space.copy()
+    _s.fix(a=4)
+    assert len(_s.sample()) == 2
+
+    _s = space.copy()
+    _s.fix(a=6)
+    assert len(_s.sample()) == 1
+
+
+def test_greater_than_condition():
+    cs = ConfigurationSpace({"a": (0, 10), "b": (1.0, 8.0)})
+    cond = GreaterThanCondition(cs["b"], cs["a"], 5)
+    cs.add_condition(cond)
+
+    space = parameterspace_from_configspace_dict(_cs_to_dict(cs))
+    assert len(space) == 2
+
+    _s = space.copy()
+    _s.fix(a=6)
+    assert len(_s.sample()) == 2
+
+    _s = space.copy()
+    _s.fix(a=4)
+    assert len(_s.sample()) == 1
+
+
+def test_in_condition():
+    cs = ConfigurationSpace({"a": (0, 10), "b": (1.0, 8.0)})
+    cond = InCondition(cs["b"], cs["a"], [1, 2, 3, 4])
+    cs.add_condition(cond)
+
+    space = parameterspace_from_configspace_dict(_cs_to_dict(cs))
+    assert len(space) == 2
+
+    _s = space.copy()
+    _s.fix(a=2)
+    assert len(_s.sample()) == 2
+
+    _s = space.copy()
+    _s.fix(a=5)
+    assert len(_s.sample()) == 1

@@ -29,9 +29,15 @@ def _get_condition(conditions: List[dict], parameter_name: str) -> Optional[Cond
             varnames.append(parent)
             # The representation is used because it quotes strings.
             if cond["type"] == "IN":
-                function_texts.append(f"{parent} in {cond['values']}")
+                function_texts.append(f"{parent} in {tuple(cond['values'])}")
             elif cond["type"] == "EQ":
                 function_texts.append(f"{parent} == {repr(cond['value'])}")
+            elif cond["type"] == "NEQ":
+                function_texts.append(f"{parent} != {repr(cond['value'])}")
+            elif cond["type"] == "GT":
+                function_texts.append(f"{parent} > {repr(cond['value'])}")
+            elif cond["type"] == "LT":
+                function_texts.append(f"{parent} < {repr(cond['value'])}")
             else:
                 raise NotImplementedError(f"Unsupported condition type {cond['type']}")
 

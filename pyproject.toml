@@ -47,6 +47,9 @@ pydocstyle = "^6.1.1"
 [tool.poetry.extras]
 examples = ["notebook", "matplotlib"]
 
+[tool.poetry.group.dev.dependencies]
+configspace = "^0.6.0"
+
 [tool.pytest.ini_options]
 filterwarnings = ["error::DeprecationWarning", "error::PendingDeprecationWarning"]
 markers = ["integration_test: Execute API calls."]
