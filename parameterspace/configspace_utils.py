@@ -1,6 +1,6 @@
 """Initialize a `ParameterSpace` from a `ConfigSpace` JSON dictionary."""
 
-from typing import List, Optional
+from typing import List, Optional, Tuple
 
 import numpy as np
 
@@ -60,6 +60,42 @@ def _get_condition(conditions: List[dict], parameter_name: str) -> Optional[Cond
     return condition
 
 
+def _convert_for_normal_parameter(
+    log: bool, lower: Optional[float], upper: Optional[float], mu: float, sigma: float
+) -> Tuple[float, float, float, float]:
+    """Convert bounds and prior mean/std from `ConfigSpace` parameter dictionary with
+    normal prior to `ParameterSpace` compatible values.
+
+    Args:
+        param_dict: Including log, mu, and sigma, as well as optionally lower and upper.
+
+    Returns:
+        lower bound, upper bound, mean and standard deviation
+
+    Raises:
+        Value error when log is True but bounds are missing.
+    """
+    if lower is None or upper is None:
+        if log:
+            raise ValueError(
+                "Please provide bounds, when using a log transform with a normal prior."
+            )
+        lower = mu - 4 * sigma
+        upper = mu + 4 * sigma
+
+    if log:
+        log_upper, log_lower = np.log(upper), np.log(lower)
+        log_interval_size = log_upper - log_lower
+        mean = (mu - log_lower) / log_interval_size
+        std = sigma / log_interval_size
+    else:
+        interval_size = upper - lower
+        mean = (mu - lower) / interval_size
+        std = sigma / interval_size
+
+    return lower, upper, mean, std
+
+
 def parameterspace_from_configspace_dict(configspace_dict: dict) -> ps.ParameterSpace:
     space = ps.ParameterSpace()
 
@@ -97,37 +133,18 @@ def parameterspace_from_configspace_dict(configspace_dict: dict) -> ps.Parameter
             space.fix(**{param_name: param_dict["value"]})
 
         elif param_dict["type"] in ["normal_float", "normal_int"]:
-            if (
-                param_dict.get("lower", None) is None
-                or param_dict.get("upper", None) is None
-            ):
-                if param_dict["log"]:
-                    raise ValueError(
-                        "Please provide bounds, when using a log transform with a "
-                        + "normal prior."
-                    )
-
-                lower_bound = param_dict["mu"] - 4 * param_dict["sigma"]
-                upper_bound = param_dict["mu"] + 4 * param_dict["sigma"]
-            else:
-                lower_bound, upper_bound = param_dict["lower"], param_dict["upper"]
-
+            lower_bound, upper_bound, mean, std = _convert_for_normal_parameter(
+                log=param_dict["log"],
+                lower=param_dict.get("lower", None),
+                upper=param_dict.get("upper", None),
+                mu=param_dict["mu"],
+                sigma=param_dict["sigma"],
+            )
             parameter_class = (
                 ps.ContinuousParameter
                 if param_dict["type"] == "normal_float"
                 else ps.IntegerParameter
             )
-
-            if param_dict["log"]:
-                log_upper, log_lower = np.log(upper_bound), np.log(lower_bound)
-                log_interval_size = log_upper - log_lower
-                mean = (param_dict["mu"] - log_lower) / log_interval_size
-                std = param_dict["sigma"] / log_interval_size
-            else:
-                interval_size = upper_bound - lower_bound
-                mean = (param_dict["mu"] - lower_bound) / interval_size
-                std = param_dict["sigma"] / interval_size
-
             space._parameters[param_name] = {
                 "parameter": parameter_class(
                     name=param_name,
