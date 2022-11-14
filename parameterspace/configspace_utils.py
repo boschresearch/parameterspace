@@ -97,6 +97,23 @@ def _convert_for_normal_parameter(
 
 
 def parameterspace_from_configspace_dict(configspace_dict: dict) -> ps.ParameterSpace:
+    """Create `ParameterSpace` instance from a `ConfigSpace` JSON dictionary.
+
+    Note, that `ParameterSpace` does not support regular, non-truncated normal priors
+    and will thus translate an unbounded normal prior to a normal truncated at +/- 4
+    sigma. Also, constant parameters are represented as categoricals with a single value
+    that are fixed to said value.
+
+    Args:
+        configspace_dict: The dictionary based on a `ConfigSpace` JSON representation.
+
+    Returns:
+        A `ParameterSpace` instance.
+
+    Raises:
+        NotImplementedError in case a given parameter type or configuration is not
+        supported.
+    """
     space = ps.ParameterSpace()
 
     for param_dict in configspace_dict["hyperparameters"]:
@@ -133,17 +150,17 @@ def parameterspace_from_configspace_dict(configspace_dict: dict) -> ps.Parameter
             space.fix(**{param_name: param_dict["value"]})
 
         elif param_dict["type"] in ["normal_float", "normal_int"]:
+            parameter_class = (
+                ps.ContinuousParameter
+                if param_dict["type"] == "normal_float"
+                else ps.IntegerParameter
+            )
             lower_bound, upper_bound, mean, std = _convert_for_normal_parameter(
                 log=param_dict["log"],
                 lower=param_dict.get("lower", None),
                 upper=param_dict.get("upper", None),
                 mu=param_dict["mu"],
                 sigma=param_dict["sigma"],
-            )
-            parameter_class = (
-                ps.ContinuousParameter
-                if param_dict["type"] == "normal_float"
-                else ps.IntegerParameter
             )
             space._parameters[param_name] = {
                 "parameter": parameter_class(
