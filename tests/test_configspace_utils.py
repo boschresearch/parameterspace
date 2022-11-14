@@ -1,16 +1,16 @@
 import json
 
-import pytest
 import numpy as np
+import pytest
 from ConfigSpace import (
     ConfigurationSpace,
     EqualsCondition,
-    NotEqualsCondition,
-    LessThanCondition,
+    Float,
     GreaterThanCondition,
     InCondition,
-    Float,
+    LessThanCondition,
     Normal,
+    NotEqualsCondition,
 )
 from ConfigSpace.read_and_write import json as cs_json
 from scipy.stats import truncnorm as scipy_truncnorm
