@@ -17,16 +17,21 @@ def _escape_parameter_name(name: str) -> str:
     return name.replace(":", "_")
 
 
-def _get_condition(conditions: List[dict], parameter_name: str) -> Optional[Condition]:
+def _get_condition(
+    conditions: List[dict], configspace_parameter_name: str
+) -> Optional[Condition]:
     """Construct a lambda function that can be used as a ParameterSpace condition from a
     ConfigSpace conditions list given a specific target parameter name.
+
+    NOTE: The `configspace_parameter_name` here needs to match the original name in
+    `ConfigSpace`, not the one transformed with `_escape_parameter_name`.
     """
     condition = Condition()
 
     varnames = []
     function_texts = []
     for cond in conditions:
-        if cond["child"] == parameter_name:
+        if cond["child"] == configspace_parameter_name:
             parent = _escape_parameter_name(cond["parent"])
             varnames.append(parent)
             # The representation is used because it quotes strings.
@@ -67,10 +72,14 @@ def _convert_for_normal_parameter(
     normal prior to `ParameterSpace` compatible values.
 
     Args:
-        param_dict: Including log, mu, and sigma, as well as optionally lower and upper.
+        log: Are we on a log scale?
+        lower: Optional lower bound in the original space (required when `log=True`)
+        upper: Optional upper bound in the original space (required when `log=True`)
+        mu: Mean of the `ConfigSpace` normal distribution
+        sigma: Standard deviation of the `ConfigSpace` normal distribution
 
     Returns:
-        lower bound, upper bound, mean and standard deviation
+        Transformed lower bound, upper bound, mean and standard deviation
 
     Raises:
         Value error when log is True but bounds are missing.
