@@ -6,12 +6,17 @@
 import abc
 import copy
 import importlib
+from keyword import iskeyword
 from typing import Dict, Optional, Tuple, Union
 
 import numpy as np
 
 from parameterspace.priors.base import BasePrior
 from parameterspace.transformations.base import BaseTransformation
+
+
+def _is_valid_python_variable_name(name: str) -> bool:
+    return name.isidentifier() and not iskeyword(name)
 
 
 class BaseParameter(abc.ABC):
@@ -33,22 +38,25 @@ class BaseParameter(abc.ABC):
         Args:
             name: Name of the parameter.
             prior: Defines the pdf from which random samples are drawn. Default (`None`)
-                correponds to a uniform prior. Note that the prior's bounds must match
+                corresponds to a uniform prior. Note that the prior's bounds must match
                 the transformation's output bounds.
-            transformation: Defines the tranformation from the values to their numerical
-                representaiton. Note that the transformation's output bounds must match
-                the prior's bounds.
+            transformation: Defines the transformation from the values to their
+                numerical representation. Note that the transformation's output bounds
+                must match the prior's bounds.
             is_continuous: Indicates whether this parameter varies continuously, i.e.
                 is a `float`.
             is_ordered: Indicates whether this parameter has a natural ordering of it's
                 values.
             num_values: Number of possible values. For ordinal, categorical, and integer
                 parameters, this equals the number of unique values. For continuous
-                parameters, it equals np.inf (eventhough technically there is only a
+                parameters, it equals np.inf (even though technically there is only a
                 finite number of float values).
             inactive_numerical_value: Placeholder value for this parameter in case it
                 is not active
         """
+        if not _is_valid_python_variable_name(name):
+            raise ValueError(f"{name} needs to be a valid Python variable name.")
+
         self.name = name
         self._prior = prior
         self._transformation = transformation

@@ -46,7 +46,7 @@ CS_CONDITIONS_JSON = """{
       "probabilities": null
     },
     {
-      "name": "lambda",
+      "name": "lmbd",
       "type": "uniform_float",
       "log": true,
       "lower": 0.0009118819655545162,
@@ -122,7 +122,7 @@ def test_conditions_and_log_transform():
         {
             "alpha": 1.0,
             "booster": "gbtree",
-            "lambda": 1.0,
+            "lmbd": 1.0,
             "nrounds": 122,
             "repl": 6,
             "max_depth": 3,
