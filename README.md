@@ -102,6 +102,21 @@ For serving it locally while working on the documentation run:
 poetry run mkdocs serve
 ```
 
+## Architectural Decision Records
+
+### Parameter Names
+
+**In the context of** naming parameters and using their name to fix them to constant
+values or condition on them via `lambda` expressions,
+**facing that** only valid Python variable names can be used in conditions, and that
+fixing parameters that do not have a valid parameter name can only be done like
+`fix(**{"invalid-variable:name": "const"})`
+**we decided for** requiring all parameter names to be valid Python variable names
+**to achieve** early failure and communication of that convention to avoid surprises
+when fixing and using conditions down the line, accepting that this rules out common
+parameter names like `lambda` and might require explicit translation between from and to
+contexts that require incompatible names (e.g. predefined benchmarks).
+
 ## License
 
 `parameterspace` is open-sourced under the Apache-2.0 license. See the

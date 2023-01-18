@@ -4,6 +4,7 @@
 # SPDX-License-Identifier: Apache-2.0
 
 import numpy as np
+import pytest
 
 from parameterspace.parameters.base import BaseParameter
 from parameterspace.priors.uniform import Uniform
@@ -59,3 +60,18 @@ def test_base_parameter():
         )
 
     assert p != q
+
+
+@pytest.mark.parametrize(
+    "name", ["param-name", "param:name", "param name", "123", "lambda", "def"]
+)
+def test_raises_on_invalid_name(name):
+    with pytest.raises(ValueError, match=name):
+        PseudoParameter(
+            name,
+            prior=Uniform(),
+            transformation=ZeroOneFloat(np.array((0, 1))),
+            is_continuous=False,
+            is_ordered=False,
+            num_values=np.inf,
+        )
