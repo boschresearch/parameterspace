@@ -39,10 +39,6 @@ nav:
 plugins:
   - search
   - gen-files:
-      # 'module' & 'exclude' throw a "Config value" warnings, as they are custom values
-      module: parameterspace
-      exclude:
-        - "__init__"
       scripts:
         - docs/generate_references.py
   - mkdocs-jupyter

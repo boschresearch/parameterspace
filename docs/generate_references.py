@@ -7,14 +7,14 @@ from pathlib import Path
 
 import mkdocs_gen_files
 
-module_name = mkdocs_gen_files.config["plugins"]["gen-files"].config["module"]
-excludes = mkdocs_gen_files.config["plugins"]["gen-files"].config["exclude"]
+# Files to exclude from the generated API docs
+excludes = ["__init__"]
 
-src_root = Path(module_name)
+src_root = Path("parameterspace")
 for path in src_root.glob("**/*.py"):
     doc_path = Path("API-Reference", path.relative_to(src_root)).with_suffix(".md")
 
-    if any([exclude in str(doc_path) for exclude in excludes]):
+    if any(exclude in str(doc_path) for exclude in excludes):
         continue
 
     with mkdocs_gen_files.open(doc_path, "w") as f:
