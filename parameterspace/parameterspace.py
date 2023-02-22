@@ -45,7 +45,7 @@ class ParameterSpace(SearchSpace):
         return self._parameters[name]
 
     def __repr__(self):
-        string = "ParameterSpace with the following parameteres and conditions\n"
+        string = "ParameterSpace with the following parameters and conditions\n"
         for p in self._parameters.values():
             string += str(p["parameter"])
             string += str(p["condition"]) + "\n"
@@ -294,18 +294,17 @@ class ParameterSpace(SearchSpace):
         """Sample a random configuration based on the priors.
 
         Args:
-            partial_configuration: Partial assignment of certain variables. If
-                not `None`, only the remaining variables are set randomly. All
-                conditions are honored.\n
-                Right now, there is no check if the partitial configuration
-                violates any conditions.
-            rng: A Numpy random number generator used to generate the
-                sample. Overrides the internal random number generator that is
-                set on initialization of the space.
+            partial_configuration: Partial assignment of certain variables. If not
+                `None`, only the remaining variables are set randomly. All conditions
+                are honored.
+                Right now, there is no check if the partial configuration violates any
+                conditions.
+            rng: A Numpy random number generator used to generate the sample. Overrides
+                the internal random number generator that is set on initialization of
+                the space.
 
         Raises:
-            ValueError: If a passed value is not valid for the corresponding
-                parameter.
+            ValueError: If a passed value is not valid for the corresponding parameter.
 
         Returns:
             Random parameter configuration.
@@ -369,7 +368,7 @@ class ParameterSpace(SearchSpace):
     def check_validity(self, configuration: dict) -> bool:
         """Test whether the provided configuration is complete and valid.
 
-        It checks wheter all parameters have a valid value or are not active.
+        It checks whether all parameters have a valid value or are not active.
         A warning is shown describing the issue.
 
         Args:
@@ -407,8 +406,8 @@ class ParameterSpace(SearchSpace):
         return True
 
     def remove_inactive(self, configuration: dict) -> dict:
-        """Identify and remove parameters that should not have a value because
-        their condition is unsatisfied.
+        """Identify and remove parameters that should not have a value because their
+        condition is unsatisfied.
 
         Args:
             configuration: Configuration to check.
@@ -427,7 +426,7 @@ class ParameterSpace(SearchSpace):
         for name, value in self._constants.items():
             if name not in configuration:
                 raise ValueError(
-                    f"Configuration does not contain contant `{name} == {value}`!"
+                    f"Configuration does not contain constant `{name} == {value}`!"
                 )
             if configuration[name] != value:
                 raise ValueError(
@@ -441,29 +440,6 @@ class ParameterSpace(SearchSpace):
             vec[i] = p["parameter"].val2num(v)
         return vec
 
-    def val2num(self, configuration: dict) -> np.ndarray:
-        """
-        Attention:
-            Deprecated. Use [ParameterSpace.to_numerical]\
-            [parameterspace.parameterspace.ParameterSpace.to_numerical].
-
-        Args:
-            configuration: Configuration to convert.
-
-        Raises:
-            ValueError:  If configuration contains invalid names or values.
-
-        Returns:
-            Vector representation of the configuration.
-
-        """
-        warnings.warn(
-            "Method ParameterSpace.val2num is deprecated and will be removed in "
-            + "the future! Please use ParameterSpace.to_numerical instead.",
-            category=DeprecationWarning,
-        )
-        return self.to_numerical(configuration)
-
     def from_numerical(self, vector: np.ndarray) -> dict:
         conf = {}
         for i, (n, p) in enumerate(self._parameters.items()):
@@ -471,26 +447,6 @@ class ParameterSpace(SearchSpace):
                 conf[n] = p["parameter"].num2val(vector[i])
         conf.update(self._constants)
         return self.remove_inactive(conf)
-
-    def num2val(self, vector: np.ndarray) -> dict:
-        """
-        Attention:
-            Deprecated. Use [ParameterSpace.from_numerical]\
-            [parameterspace.parameterspace.ParameterSpace.from_numerical].
-
-        Args:
-            vector: Numerical vector representation of a configuration.
-
-        Returns:
-            Dictionary representation of the input configuration.
-
-        """
-        warnings.warn(
-            "Method ParameterSpace.num2val is deprecated and will be removed in the "
-            + "future! Please use ParameterSpace.from_numerical instead.",
-            category=DeprecationWarning,
-        )
-        return self.from_numerical(vector)
 
     def has_conditions(self) -> bool:
         """Check if any of the parameters in the current `ParameterSpace` is
@@ -505,7 +461,7 @@ class ParameterSpace(SearchSpace):
         return False
 
     def get_continuous_bounds(self) -> List[Tuple]:
-        """Return the ParamerSpace specific bounds if it is purely continuous.
+        """Return the ParameterSpace specific bounds if it is purely continuous.
 
         Raises:
             ValueError: If `ParameterSpace` contains non-continuous parameters.
@@ -532,7 +488,7 @@ class ParameterSpace(SearchSpace):
                 to be rendered in LaTeX table.
 
         Returns:
-            LaTeX table represenation
+            LaTeX table representation
         """
         try:
             # pylint: disable=import-outside-toplevel
