@@ -19,6 +19,7 @@ from parameterspace.parameters import (
     CategoricalParameter,
     ContinuousParameter,
     IntegerParameter,
+    OrdinalParameter,
 )
 from parameterspace.parameters.base import BaseParameter
 
@@ -525,7 +526,7 @@ class ParameterSpace(SearchSpace):
                 transformation_str = "Log" if "Log" in transformation_name else ""
                 prior_str = prior_name
 
-            if isinstance(parameter, ContinuousParameter):
+            elif isinstance(parameter, ContinuousParameter):
                 type_str = "Float"
                 prior_str = prior_name
 
@@ -538,7 +539,7 @@ class ParameterSpace(SearchSpace):
                     transformation_str = " "
                     values_str = f"$[{parameter.bounds[0]}, {parameter.bounds[1]}]$"
 
-            if isinstance(parameter, CategoricalParameter):
+            elif isinstance(parameter, CategoricalParameter):
                 type_str = "Categorical"
                 values_str = "[" + ", ".join(parameter.values) + "]"
                 transformation_str = " "
@@ -546,6 +547,15 @@ class ParameterSpace(SearchSpace):
                 prior_str = (
                     "[" + ",".join(map(lambda p: f"{p:3.2f}", prior_probs)) + "]"
                 )
+
+            elif isinstance(parameter, OrdinalParameter):
+                type_str = "Ordinal"
+                values_str = "[" + ", ".join(parameter.values) + "]"
+                transformation_str = " "
+                prior_str = prior_name
+
+            else:
+                raise ValueError(f"Unknown parameter type {type(parameter)}")
 
             latex_strs.append(
                 " & ".join(
