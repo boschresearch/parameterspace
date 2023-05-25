@@ -48,7 +48,7 @@ class Condition:
         if not self.all_varnames:
             return True
         config = {} if config is None else config
-        for (vn, fn) in zip(self.varnames, self.functions):
+        for vn, fn in zip(self.varnames, self.functions):
             if not set(vn).issubset(config.keys()):
                 raise ValueError("Not all variables set to evaluate the condition!")
             args = [config[n] for n in vn]

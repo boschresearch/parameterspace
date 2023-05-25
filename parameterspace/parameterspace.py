@@ -207,7 +207,6 @@ class ParameterSpace(SearchSpace):
         self._constants.update(**actual_constants)
 
         for p in list(self._parameters.keys()):
-
             if p in self._constants:
                 del self._parameters[p]
                 continue

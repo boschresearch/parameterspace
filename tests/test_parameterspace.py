@@ -258,7 +258,6 @@ def test_hierarchical_space():
     )
 
     for values in itertools.product([True, False, None], repeat=5):
-
         config = {f"p{i+1}": values[i] for i in range(4) if values[i] is not None}
 
         try:
