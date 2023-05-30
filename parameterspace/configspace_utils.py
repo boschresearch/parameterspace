@@ -6,53 +6,25 @@ import numpy as np
 
 import parameterspace as ps
 from parameterspace.condition import Condition
-from parameterspace.utils import verify_lambda
-
-RESERVED_WORDS = [
-    "and",
-    "as",
-    "assert",
-    "break",
-    "class",
-    "continue",
-    "def",
-    "del",
-    "elif",
-    "else",
-    "except",
-    "finally",
-    "for",
-    "form",
-    "global",
-    "if",
-    "import",
-    "in",
-    "is",
-    "lambda",
-    "nonlocal",
-    "not",
-    "or",
-    "pass",
-    "raise",
-    "return",
-    "try",
-    "while",
-    "with",
-    "yield",
-]
+from parameterspace.utils import is_valid_python_variable_name, verify_lambda
 
 
 def _escape_parameter_name(name: str) -> str:
     """Replace colons, dashes, dots and spaces with an underscore and add an underscore
     suffix to reserved Python words.
     """
-    name = name.replace(":", "_").replace("-", "_").replace(".", "_").replace(" ", "_")
+    _name = name.replace(":", "_").replace("-", "_").replace(".", "_").replace(" ", "_")
 
-    for reserved_word in RESERVED_WORDS:
-        if name == reserved_word:
-            name = f"{name}_"
+    if not is_valid_python_variable_name(_name):
+        _name = f"{_name}_"
 
-    return name
+    if not is_valid_python_variable_name(_name):
+        raise ValueError(
+            f'Failed to transform "{name}" into a valid parameter name, '
+            + f'ended up with "{_name}".'
+        )
+
+    return _name
 
 
 def _get_condition(
