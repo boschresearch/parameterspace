@@ -1,20 +1,30 @@
 """Initialize a `ParameterSpace` from a `ConfigSpace` JSON dictionary."""
 
-from typing import List, Optional, Tuple
+from typing import Dict, List, Optional, Tuple
 
 import numpy as np
 
 import parameterspace as ps
 from parameterspace.condition import Condition
-from parameterspace.utils import verify_lambda
+from parameterspace.utils import is_valid_python_variable_name, verify_lambda
 
 
 def _escape_parameter_name(name: str) -> str:
-    """Replace colons with underscores.
-
-    Colons are incompatible as ParameterSpace parameter names.
+    """Replace colons, dashes, dots and spaces with an underscore and add an underscore
+    suffix to reserved Python words.
     """
-    return name.replace(":", "_")
+    _name = name.replace(":", "_").replace("-", "_").replace(".", "_").replace(" ", "_")
+
+    if not is_valid_python_variable_name(_name):
+        _name = f"{_name}_"
+
+    if not is_valid_python_variable_name(_name):
+        raise ValueError(
+            f'Failed to transform "{name}" into a valid parameter name, '
+            + f'ended up with "{_name}".'
+        )
+
+    return _name
 
 
 def _get_condition(
@@ -105,7 +115,9 @@ def _convert_for_normal_parameter(
     return lower, upper, mean, std
 
 
-def parameterspace_from_configspace_dict(configspace_dict: dict) -> ps.ParameterSpace:
+def parameterspace_from_configspace_dict(
+    configspace_dict: dict,
+) -> Tuple[ps.ParameterSpace, Dict[str, str]]:
     """Create `ParameterSpace` instance from a `ConfigSpace` JSON dictionary.
 
     Note, that `ParameterSpace` does not support regular, non-truncated normal priors
@@ -118,15 +130,21 @@ def parameterspace_from_configspace_dict(configspace_dict: dict) -> ps.Parameter
 
     Returns:
         A `ParameterSpace` instance.
+        A mapping between parameter names that were changed for compatibility reasons.
 
     Raises:
         NotImplementedError in case a given parameter type or configuration is not
         supported.
     """
     space = ps.ParameterSpace()
+    names: Dict[str, str] = {}
 
     for param_dict in configspace_dict["hyperparameters"]:
         param_name = _escape_parameter_name(param_dict["name"])
+        if param_dict["name"] != param_name:
+            names[param_name] = param_dict["name"]
+            names[param_dict["name"]] = param_name
+
         condition = _get_condition(configspace_dict["conditions"], param_dict["name"])
         if param_dict["type"] == "uniform_int":
             space._parameters[param_name] = {
@@ -203,4 +221,4 @@ def parameterspace_from_configspace_dict(configspace_dict: dict) -> ps.Parameter
         else:
             raise NotImplementedError(f"Unsupported type {param_dict['type']}")
 
-    return space
+    return space, names

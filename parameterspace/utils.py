@@ -6,6 +6,7 @@
 import os
 import re
 from functools import wraps
+from keyword import iskeyword
 from typing import Callable, Iterable, List, Tuple
 
 import numpy as np
@@ -134,3 +135,7 @@ def verify_lambda(variables: List[str], body: str) -> bool:
         return False
 
     return True
+
+
+def is_valid_python_variable_name(name: str) -> bool:
+    return name.isidentifier() and not iskeyword(name)

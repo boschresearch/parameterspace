@@ -115,7 +115,8 @@ def _cs_to_dict(cs: ConfigurationSpace) -> dict:
 
 def test_conditions_and_log_transform():
     cs_dict = json.loads(CS_CONDITIONS_JSON)
-    space = parameterspace_from_configspace_dict(cs_dict)
+    space, names = parameterspace_from_configspace_dict(cs_dict)
+    assert not names
     assert len(space) == 7
     assert space.has_conditions()
     assert space.check_validity(
@@ -172,7 +173,8 @@ def test_continuous_with_normal_prior():
         }
         """
     )
-    space = parameterspace_from_configspace_dict(cs_dict)
+    space, names = parameterspace_from_configspace_dict(cs_dict)
+    assert not names
     assert len(space) == 1
 
     param = space.get_parameter_by_name("p")["parameter"]
@@ -223,7 +225,8 @@ def test_continuous_with_log_normal_prior():
         }}
         """
     )
-    space = parameterspace_from_configspace_dict(cs_dict)
+    space, names = parameterspace_from_configspace_dict(cs_dict)
+    assert not names
     assert len(space) == 1
 
     param = space.get_parameter_by_name("p")["parameter"]
@@ -260,7 +263,8 @@ def test_integer_with_normal_prior():
         }
         """
     )
-    space = parameterspace_from_configspace_dict(cs_dict)
+    space, names = parameterspace_from_configspace_dict(cs_dict)
+    assert not names
     assert len(space) == 1
 
     param = space.get_parameter_by_name("p")["parameter"]
@@ -299,7 +303,8 @@ def test_categorical_with_custom_probabilities():
           "json_format_version": 0.4
         }"""
     )
-    space = parameterspace_from_configspace_dict(cs_dict)
+    space, names = parameterspace_from_configspace_dict(cs_dict)
+    assert not names
     assert len(space) == 1
 
     param = space.get_parameter_by_name("c")["parameter"]
@@ -315,7 +320,7 @@ def test_equals_condition():
     cond = EqualsCondition(cs["b"], cs["a"], 1)
     cs.add_condition(cond)
 
-    space = parameterspace_from_configspace_dict(_cs_to_dict(cs))
+    space, _ = parameterspace_from_configspace_dict(_cs_to_dict(cs))
     assert len(space) == 2
 
     _s = space.copy()
@@ -332,7 +337,7 @@ def test_not_equals_condition():
     cond = NotEqualsCondition(cs["b"], cs["a"], 1)
     cs.add_condition(cond)
 
-    space = parameterspace_from_configspace_dict(_cs_to_dict(cs))
+    space, _ = parameterspace_from_configspace_dict(_cs_to_dict(cs))
     assert len(space) == 2
 
     _s = space.copy()
@@ -349,7 +354,7 @@ def test_less_than_condition():
     cond = LessThanCondition(cs["b"], cs["a"], 5)
     cs.add_condition(cond)
 
-    space = parameterspace_from_configspace_dict(_cs_to_dict(cs))
+    space, _ = parameterspace_from_configspace_dict(_cs_to_dict(cs))
     assert len(space) == 2
 
     _s = space.copy()
@@ -366,7 +371,7 @@ def test_greater_than_condition():
     cond = GreaterThanCondition(cs["b"], cs["a"], 5)
     cs.add_condition(cond)
 
-    space = parameterspace_from_configspace_dict(_cs_to_dict(cs))
+    space, _ = parameterspace_from_configspace_dict(_cs_to_dict(cs))
     assert len(space) == 2
 
     _s = space.copy()
@@ -383,7 +388,7 @@ def test_in_condition():
     cond = InCondition(cs["b"], cs["a"], [1, 2, 3, 4])
     cs.add_condition(cond)
 
-    space = parameterspace_from_configspace_dict(_cs_to_dict(cs))
+    space, _ = parameterspace_from_configspace_dict(_cs_to_dict(cs))
     assert len(space) == 2
 
     _s = space.copy()
@@ -393,3 +398,21 @@ def test_in_condition():
     _s = space.copy()
     _s.fix(a=5)
     assert len(_s.sample()) == 1
+
+
+@pytest.mark.parametrize(
+    "cs_name,ps_name",
+    [
+        ("a-b", "a_b"),
+        ("a.b", "a_b"),
+        ("a b", "a_b"),
+        ("a:b", "a_b"),
+        ("lambda", "lambda_"),
+    ],
+)
+def test_configspace_parameterspace_parameter_name_mapping(cs_name, ps_name):
+    cs = ConfigurationSpace({cs_name: (0, 1)})
+    space, names = parameterspace_from_configspace_dict(_cs_to_dict(cs))
+    assert ps_name in space.get_parameter_names()
+    assert names[cs_name] == ps_name
+    assert names[ps_name] == cs_name

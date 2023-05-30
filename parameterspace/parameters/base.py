@@ -6,17 +6,13 @@
 import abc
 import copy
 import importlib
-from keyword import iskeyword
 from typing import Dict, Optional, Tuple, Union
 
 import numpy as np
 
 from parameterspace.priors.base import BasePrior
 from parameterspace.transformations.base import BaseTransformation
-
-
-def _is_valid_python_variable_name(name: str) -> bool:
-    return name.isidentifier() and not iskeyword(name)
+from parameterspace.utils import is_valid_python_variable_name
 
 
 class BaseParameter(abc.ABC):
@@ -54,7 +50,7 @@ class BaseParameter(abc.ABC):
             inactive_numerical_value: Placeholder value for this parameter in case it
                 is not active
         """
-        if not _is_valid_python_variable_name(name):
+        if not is_valid_python_variable_name(name):
             raise ValueError(f"{name} needs to be a valid Python variable name.")
 
         self.name = name
