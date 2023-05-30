@@ -14,32 +14,27 @@ classifiers = [
     "Programming Language :: Python :: 3.10",
 ]
 
-[[tool.poetry.source]]
-name = "public-pypi"
-url = "https://pypi.python.org/simple"
-default = true
-
 [tool.poetry.dependencies]
 python = ">=3.8,<4.0"
 numpy = ">=1.22.0"
 scipy = ">=1.6.0"
 
 [tool.poetry.dev-dependencies]
-black = "22.12.0"
+black = "23.3.0"
 isort = "^5.12.0"
-mkdocs = "^1.4.2"
-mkdocs-awesome-pages-plugin = "^2.8.0"
-mkdocs-gen-files = "^0.4.0"
-mkdocs-material = "^8.5.11"
-mkdocstrings = {version="^0.20.0", extras=["python-legacy"]}
-mkdocs-jupyter = "^0.22.0"
-mypy = "^0.991"
-pylint = "^2.15.10"
-pytest = "^7.2.1"
-pytest-cov = "^4.0.0"
-pre-commit = "^3.0.2"
+mkdocs = "^1.4.3"
+mkdocs-awesome-pages-plugin = "^2.9.1"
+mkdocs-gen-files = "^0.5.0"
+mkdocs-material = "^9.1.14"
+mkdocstrings = {version="^0.21.2", extras=["python-legacy"]}
+mkdocs-jupyter = "^0.24.1"
+mypy = "^1.3.0"
+pylint = "^2.17.4"
+pytest = "^7.3.1"
+pytest-cov = "^4.1.0"
+pre-commit = "^3.3.2"
 dill = "^0.3.6"
-pytest-rerunfailures = "^11.0"
+pytest-rerunfailures = "^11.1.2"
 num2tex = "^0.8"
 mike = "^1.1.2"
 pydocstyle = "^6.3.0"

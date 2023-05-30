@@ -19,9 +19,7 @@ def check_sampling(p, num_samples=32):
 
 
 def check_value_numvalue_conversion(p, ref, num_values=True):
-
     for v, tv in ref:
-
         assert np.allclose(p.val2num(v), tv, 1e-6)
 
         if num_values:
@@ -31,7 +29,6 @@ def check_value_numvalue_conversion(p, ref, num_values=True):
 
 
 def check_values(p, values, valid):
-
     for value, v in zip(values, valid):
         assert p.check_value(value) == v
 

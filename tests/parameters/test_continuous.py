@@ -36,7 +36,7 @@ def test_continuous_parameter(num_samples=2**14):
 
     samples = p.sample_values(num_samples=num_samples)
     stat, _ = sps.kstest(
-        samples, sps.uniform(loc=bounds[0], scale=(bounds[1] - bounds[0])).cdf
+        samples, sps.uniform(loc=bounds[0], scale=bounds[1] - bounds[0]).cdf
     )
     # KS statistic should be less than this value for confidence alpha=0.05
     # reference: https://en.wikipedia.org/wiki/Kolmogorov%E2%80%93Smirnov_test

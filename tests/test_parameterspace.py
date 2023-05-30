@@ -210,20 +210,20 @@ def test_checking_invalid_configs():
     space.add(p1)
     space.add(p2, lambda p1: p1 >= 0)
 
-    config1 = dict(p1=0, p2=-1)
+    config1 = {"p1": 0, "p2": -1}
 
     with pytest.warns(RuntimeWarning):
         assert not space.check_validity(config1)
 
-    config2 = dict(p1=0, p2=None)
+    config2 = {"p1": 0, "p2": None}
     with pytest.warns(RuntimeWarning):
         assert not space.check_validity(config2)
 
-    config3 = dict(p1=-1, p2=2)
+    config3 = {"p1": -1, "p2": 2}
     with pytest.warns(RuntimeWarning):
         assert not space.check_validity(config3)
 
-    config4 = dict(p1=0, p2=0)
+    config4 = {"p1": 0, "p2": 0}
     space.check_validity(config4)
 
 
@@ -249,16 +249,15 @@ def test_hierarchical_space():
     # reference configurations that should cover all possible combinations of satisfied
     # and unsatisfied conditions and whether those are valid or not.
 
-    should_contain = dict(
-        p1=lambda conf: True,
-        p2=lambda conf: conf["p1"],
-        p3=lambda conf: conf["p1"] and conf["p2"],
-        p4=lambda conf: conf["p1"] and conf["p2"] and not conf["p3"],
-        p5=lambda conf: conf["p1"] and conf["p2"] and conf["p3"],
-    )
+    should_contain = {
+        "p1": lambda conf: True,
+        "p2": lambda conf: conf["p1"],
+        "p3": lambda conf: conf["p1"] and conf["p2"],
+        "p4": lambda conf: conf["p1"] and conf["p2"] and not conf["p3"],
+        "p5": lambda conf: conf["p1"] and conf["p2"] and conf["p3"],
+    }
 
     for values in itertools.product([True, False, None], repeat=5):
-
         config = {f"p{i+1}": values[i] for i in range(4) if values[i] is not None}
 
         try:

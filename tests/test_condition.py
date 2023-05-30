@@ -16,11 +16,11 @@ def test_condition_lambda_fn():
     c = Condition(lambda x1, x2: x1 - x2 > 0)
 
     assert c.all_varnames == set(["x1", "x2"])
-    assert c(dict(x1=2, x2=1))
-    assert c(dict(x2=1, x1=2))
-    assert not c(dict(x1=1, x2=2))
+    assert c({"x1": 2, "x2": 1})
+    assert c({"x2": 1, "x1": 2})
+    assert not c({"x1": 1, "x2": 2})
     with pytest.raises(ValueError):
-        c(dict(x1=5))
+        c({"x1": 5})
 
 
 def test_condition_regular_fn():
@@ -111,7 +111,7 @@ def test_from_to_dict(n_samples=64):
 
     assert c3 == c4
     for x1, x2, x3 in random_inputs:
-        assert c3(dict(x1=x1, x2=x2, x3=x3)) == c4(dict(x1=x1, x2=x2, x3=x3))
+        assert c3({"x1": x1, "x2": x2, "x3": x3}) == c4({"x1": x1, "x2": x2, "x3": x3})
 
     # make sure a deserialized condition can be serialized again
     json_list2 = c4.to_dict()
