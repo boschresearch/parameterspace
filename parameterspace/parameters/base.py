@@ -18,6 +18,7 @@ from parameterspace.utils import is_valid_python_variable_name
 class BaseParameter(abc.ABC):
     """Base parameter class defining the API."""
 
+    # pylint: disable-next=too-many-positional-arguments
     def __init__(
         self,
         name: str,

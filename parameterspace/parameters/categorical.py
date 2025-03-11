@@ -18,6 +18,7 @@ class CategoricalParameter(BaseParameter):
     """Categorical parameter that can take discrete values of any type."""
 
     @store_init_arguments
+    # pylint: disable-next=too-many-positional-arguments
     def __init__(
         self,
         name: str,
@@ -43,13 +44,15 @@ class CategoricalParameter(BaseParameter):
         transformation = Cat2Num(values) if transformation is None else transformation
 
         if prior is None:
-            prior = Categorical([1.0] * len(values))
+            _prior = Categorical([1.0] * len(values))
         elif not isinstance(prior, Categorical):
-            prior = Categorical(prior)
+            _prior = Categorical(prior)
+        else:
+            _prior = prior
 
         super().__init__(
             name,
-            prior,
+            _prior,
             transformation,
             is_continuous=False,
             is_ordered=False,

@@ -3,8 +3,8 @@ name: ci-cd-pipeline
 on: [push, pull_request]
 jobs:
   test:
-    runs-on: ubuntu-20.04
-    container: python:3.8-slim
+    runs-on: ubuntu-24.04
+    container: python:3.13
     steps:
       - uses: actions/checkout@v2
       - id: install-dependencies
@@ -41,8 +41,8 @@ jobs:
   deploy:
     needs: test
     if: startsWith(github.ref, 'refs/tags/v')
-    runs-on: ubuntu-20.04
-    container: python:3.8-slim
+    runs-on: ubuntu-24.04
+    container: python:3.13
     steps:
       - uses: actions/checkout@v2
       - name: Build
@@ -57,7 +57,7 @@ jobs:
   docs:
     needs: test
     if: ${{ startsWith(github.ref, 'refs/tags/v')  || contains(github.event.head_commit.message, '[update-docs]') }}
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v2
         with:

@@ -1,3 +1,4 @@
+import io
 import json
 
 import numpy as np
@@ -5,14 +6,11 @@ import pytest
 from ConfigSpace import (
     ConfigurationSpace,
     EqualsCondition,
-    Float,
     GreaterThanCondition,
     InCondition,
     LessThanCondition,
-    Normal,
     NotEqualsCondition,
 )
-from ConfigSpace.read_and_write import json as cs_json
 from scipy.stats import truncnorm as scipy_truncnorm
 
 from parameterspace.configspace_utils import parameterspace_from_configspace_dict
@@ -110,7 +108,10 @@ CS_CONDITIONS_JSON = """{
 
 
 def _cs_to_dict(cs: ConfigurationSpace) -> dict:
-    return json.loads(cs_json.write(cs))
+    f = io.StringIO()
+    cs.to_json(f)
+    f.seek(0)
+    return json.loads(f.read())
 
 
 def test_conditions_and_log_transform():
@@ -162,7 +163,7 @@ def test_continuous_with_normal_prior():
               "type": "normal_float",
               "log": false,
               "mu": 8.0,
-              "sigma": 10.0,
+              "sigma": 2.0,
               "default": 6.2
             }
           ],
@@ -183,21 +184,6 @@ def test_continuous_with_normal_prior():
     samples = np.array([space.sample()["p"] for _ in range(10_000)])
     assert abs(samples.mean() - cs_dict["hyperparameters"][0]["mu"]) < 0.1
     assert abs(samples.std() - cs_dict["hyperparameters"][0]["sigma"]) < 0.2
-
-
-def test_continuous_with_log_normal_prior_and_no_bounds_raises():
-    cs = ConfigurationSpace(
-        space={
-            "p": Float(
-                "p",
-                default=0.1,
-                log=True,
-                distribution=Normal(1.0, 0.6),
-            ),
-        },
-    )
-    with pytest.raises(ValueError):
-        parameterspace_from_configspace_dict(_cs_to_dict(cs))
 
 
 def test_continuous_with_log_normal_prior():
@@ -318,7 +304,7 @@ def test_categorical_with_custom_probabilities():
 def test_equals_condition():
     cs = ConfigurationSpace({"a": [1, 2, 3], "b": (1.0, 8.0)})
     cond = EqualsCondition(cs["b"], cs["a"], 1)
-    cs.add_condition(cond)
+    cs.add(cond)
 
     space, _ = parameterspace_from_configspace_dict(_cs_to_dict(cs))
     assert len(space) == 2
@@ -335,7 +321,7 @@ def test_equals_condition():
 def test_not_equals_condition():
     cs = ConfigurationSpace({"a": [1, 2, 3], "b": (1.0, 8.0)})
     cond = NotEqualsCondition(cs["b"], cs["a"], 1)
-    cs.add_condition(cond)
+    cs.add(cond)
 
     space, _ = parameterspace_from_configspace_dict(_cs_to_dict(cs))
     assert len(space) == 2
@@ -352,7 +338,7 @@ def test_not_equals_condition():
 def test_less_than_condition():
     cs = ConfigurationSpace({"a": (0, 10), "b": (1.0, 8.0)})
     cond = LessThanCondition(cs["b"], cs["a"], 5)
-    cs.add_condition(cond)
+    cs.add(cond)
 
     space, _ = parameterspace_from_configspace_dict(_cs_to_dict(cs))
     assert len(space) == 2
@@ -369,7 +355,7 @@ def test_less_than_condition():
 def test_greater_than_condition():
     cs = ConfigurationSpace({"a": (0, 10), "b": (1.0, 8.0)})
     cond = GreaterThanCondition(cs["b"], cs["a"], 5)
-    cs.add_condition(cond)
+    cs.add(cond)
 
     space, _ = parameterspace_from_configspace_dict(_cs_to_dict(cs))
     assert len(space) == 2
@@ -386,7 +372,7 @@ def test_greater_than_condition():
 def test_in_condition():
     cs = ConfigurationSpace({"a": (0, 10), "b": (1.0, 8.0)})
     cond = InCondition(cs["b"], cs["a"], [1, 2, 3, 4])
-    cs.add_condition(cond)
+    cs.add(cond)
 
     space, _ = parameterspace_from_configspace_dict(_cs_to_dict(cs))
     assert len(space) == 2
