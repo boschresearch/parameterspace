@@ -9,7 +9,6 @@ license = "Apache-2.0"
 classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
@@ -17,9 +16,9 @@ classifiers = [
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.9,<4.0"
+python = ">=3.10,<4.0"
 numpy = ">=1.26.0"
-scipy = ">=1.6.0"
+scipy = ">=1.14.0"
 
 [tool.poetry.group.dev.dependencies]
 black = "23.3.0"
