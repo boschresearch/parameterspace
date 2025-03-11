@@ -437,49 +437,26 @@ test = ["pytest"]
 
 [[package]]
 name = "configspace"
-version = "0.6.1"
+version = "1.2.1"
 description = "Creation and manipulation of parameter configuration spaces for automated algorithm configuration and hyperparameter tuning."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.8"
 files = [
-    {file = "ConfigSpace-0.6.1-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:312e57ac5af8ac625151cba9404558ee6ec139c6c897b2a36676558b99a23bd4"},
-    {file = "ConfigSpace-0.6.1-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:53260093e647b9fa2cdd7152b8126ba3988e51645c85b842fc9cc31ab3513b9b"},
-    {file = "ConfigSpace-0.6.1-cp310-cp310-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:108c0c1f890fdf92bc9f918cea8c7e05afc309f20811a528b763bc41cd560844"},
-    {file = "ConfigSpace-0.6.1-cp310-cp310-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a0354e4555dd8a06197d92488cb41c80b699c400d6f48b6fda0a71f974b6d760"},
-    {file = "ConfigSpace-0.6.1-cp310-cp310-win_amd64.whl", hash = "sha256:b86dd900b5c4fffe0d070435d22d31e4bd6ba89f88af8004d140d99c8e6b01a3"},
-    {file = "ConfigSpace-0.6.1-cp311-cp311-macosx_10_9_universal2.whl", hash = "sha256:72f88ee26a414fc8726d4fa4347e736dd70faa89635dc3bcb1090f8d3e6476d0"},
-    {file = "ConfigSpace-0.6.1-cp311-cp311-macosx_10_9_x86_64.whl", hash = "sha256:5f51c153f1670022d020709150bcb2c30f82460fed71d2c509d106fbc416f5c8"},
-    {file = "ConfigSpace-0.6.1-cp311-cp311-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:3a78ec036c6ef9b64bafe19888c5a1d7063f3eef4784bd5b8d734e11750b9144"},
-    {file = "ConfigSpace-0.6.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:22bf9523f0b6c626cd5bb1ceeaef665942767e220be796615121528649588ca4"},
-    {file = "ConfigSpace-0.6.1-cp311-cp311-win_amd64.whl", hash = "sha256:cdb588cf4d20c516422f6744daed93396cbe191dc3d07902caebe2ebbd5a01d1"},
-    {file = "ConfigSpace-0.6.1-cp37-cp37m-macosx_10_9_x86_64.whl", hash = "sha256:bd041181078eebaa152a8e9a2db62a498ef96c1c8234f312c4a41b3a2aca67ad"},
-    {file = "ConfigSpace-0.6.1-cp37-cp37m-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:5f67e1e93aab6d877998ad8609ef15012b3581089e8cde44f760cacfdcf8d8d8"},
-    {file = "ConfigSpace-0.6.1-cp37-cp37m-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:f5822470f564eb1276d2a377ae56ded98be478799fd7c3048a45275a6ddf418a"},
-    {file = "ConfigSpace-0.6.1-cp37-cp37m-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:695775a3e3d0d5f0fafd38be1abd61761bae490d1e90c1875528d3db45eeb167"},
-    {file = "ConfigSpace-0.6.1-cp37-cp37m-win32.whl", hash = "sha256:9e1ecced2fda9a415145a16b99807c7452115690db9367bafe5d74062265595c"},
-    {file = "ConfigSpace-0.6.1-cp37-cp37m-win_amd64.whl", hash = "sha256:f41119f47ec1335e8f521d01f3276e90cf6bf970580476b9f08651e2fd701933"},
-    {file = "ConfigSpace-0.6.1-cp38-cp38-macosx_10_9_universal2.whl", hash = "sha256:0640049bfc4e7a1f620983f67908e83aa2eaf62e8242e62f79697d81b7840602"},
-    {file = "ConfigSpace-0.6.1-cp38-cp38-macosx_10_9_x86_64.whl", hash = "sha256:843a3e04fcf67a4d16a807698c33bea7c7d75f7c4fc14d452e64539f4c6f47e4"},
-    {file = "ConfigSpace-0.6.1-cp38-cp38-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:cd5bb6b3e58a72a369fdbb0a0b72b67da28702780ac0414e9b0f71486926d875"},
-    {file = "ConfigSpace-0.6.1-cp38-cp38-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6df38beeccf5dbae25a0860236725eb280b2a8f619e5666fc02714e931cb476f"},
-    {file = "ConfigSpace-0.6.1-cp38-cp38-win_amd64.whl", hash = "sha256:a03b5dad397da2842c82f369341e8e84c9721be9e6ae6927dd8eaabcaab7392f"},
-    {file = "ConfigSpace-0.6.1-cp39-cp39-macosx_10_9_universal2.whl", hash = "sha256:e7c1cab5b85f1dd6530c6bf7abdb8d67660a666fad87dda502b297ef802b0040"},
-    {file = "ConfigSpace-0.6.1-cp39-cp39-macosx_10_9_x86_64.whl", hash = "sha256:5ca15aafae855854ba60566aaf8258100af69eed0a7e69acaaf055d1a61e64ca"},
-    {file = "ConfigSpace-0.6.1-cp39-cp39-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:eadde9af11f8c012ded025e959133c51f27a7168a6e5ee3e32886a156cfe72ab"},
-    {file = "ConfigSpace-0.6.1-cp39-cp39-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:1b14306cc4c5241770e4487dfe988bc217e264101a08a7fd638d2146426359be"},
-    {file = "ConfigSpace-0.6.1-cp39-cp39-win_amd64.whl", hash = "sha256:f02c1df6bbd74f075ab351d6a61504d1a53a6db6b22802831143c3296a10f465"},
-    {file = "ConfigSpace-0.6.1.tar.gz", hash = "sha256:b0a9487c7997481a041feee46f2c8fc9fb9787e1ff553250838d62624dfb0d5a"},
+    {file = "configspace-1.2.1.tar.gz", hash = "sha256:2fc1c4477f7839d38b53d8813c2581967df57ccd7d8b4b506e879a8835cb964c"},
 ]
 
 [package.dependencies]
-more-itertools = "*"
+more_itertools = "*"
 numpy = "*"
 pyparsing = "*"
 scipy = "*"
-typing-extensions = "*"
+typing_extensions = "*"
 
 [package.extras]
-dev = ["automl-sphinx-theme (>=0.1.11)", "mypy", "pre-commit", "pytest (>=4.6)", "pytest-cov"]
+dev = ["ConfigSpace[docs,test,tooling]"]
+docs = ["black", "cairosvg", "markdown-exec[ansi]", "mike", "mkdocs", "mkdocs-autorefs", "mkdocs-gen-files", "mkdocs-glightbox", "mkdocs-literate-nav", "mkdocs-material", "mkdocstrings[python]", "pillow"]
+test = ["pytest (>=7)", "pytest-cov", "pytest_cases"]
+tooling = ["mypy", "pre-commit", "ruff", "types-pyyaml"]
 
 [[package]]
 name = "coverage"
@@ -2792,4 +2769,4 @@ examples = []
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.9,<4.0"
-content-hash = "02230ee7f191aed4b91b8b79b726550cedc0a595ec1ff8432bda2dfa8e35b1a1"
+content-hash = "5db1098b2441d8f273fd6e50f1faca83d23f5f28405670d9c587e924dbfe570d"

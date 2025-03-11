@@ -17,7 +17,7 @@ classifiers = [
 
 [tool.poetry.dependencies]
 python = ">=3.9,<4.0"
-numpy = ">=1.22.0"
+numpy = ">=1.26.0"
 scipy = ">=1.6.0"
 
 [tool.poetry.group.dev.dependencies]
@@ -39,7 +39,7 @@ pytest-rerunfailures = "^15.0.0"
 num2tex = "^0.8"
 mike = "^1.1.2"
 pydocstyle = "^6.3.0"
-configspace = "^0.6.0"
+configspace = "^1.2.1"
 
 [tool.poetry.extras]
 examples = ["notebook", "matplotlib"]
