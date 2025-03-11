@@ -163,7 +163,7 @@ def test_continuous_with_normal_prior():
               "type": "normal_float",
               "log": false,
               "mu": 8.0,
-              "sigma": 10.0,
+              "sigma": 2.0,
               "default": 6.2
             }
           ],
