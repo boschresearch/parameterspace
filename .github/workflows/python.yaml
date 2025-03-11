@@ -4,7 +4,7 @@ on: [push, pull_request]
 jobs:
   test:
     runs-on: ubuntu-24.04
-    container: python:3.12-slim
+    container: python:3.12
     steps:
       - uses: actions/checkout@v2
       - id: install-dependencies
@@ -42,7 +42,7 @@ jobs:
     needs: test
     if: startsWith(github.ref, 'refs/tags/v')
     runs-on: ubuntu-24.04
-    container: python:3.12-slim
+    container: python:3.12
     steps:
       - uses: actions/checkout@v2
       - name: Build
