@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "parameterspace"
-version = "0.10.0"
+version = "0.10.1"
 description = "Parametrized hierarchical spaces with flexible priors and transformations."
 readme = "README.md"
 repository = "https://github.com/boschresearch/parameterspace"
@@ -9,17 +9,18 @@ license = "Apache-2.0"
 classifiers = [
     "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
 ]
 
 [tool.poetry.dependencies]
-python = ">=3.8,<4.0"
+python = ">=3.9,<4.0"
 numpy = ">=1.22.0"
 scipy = ">=1.6.0"
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 black = "23.3.0"
 isort = "^5.12.0"
 mkdocs = "^1.4.3"
@@ -38,12 +39,10 @@ pytest-rerunfailures = "^11.1.2"
 num2tex = "^0.8"
 mike = "^1.1.2"
 pydocstyle = "^6.3.0"
+configspace = "^0.6.0"
 
 [tool.poetry.extras]
 examples = ["notebook", "matplotlib"]
-
-[tool.poetry.group.dev.dependencies]
-configspace = "^0.6.0"
 
 [tool.pytest.ini_options]
 filterwarnings = ["error::DeprecationWarning", "error::PendingDeprecationWarning"]

@@ -61,7 +61,7 @@ pip install parameterspace
 
 ### Prerequisites
 
-- Python >= 3.8
+- Python >= 3.9
 - [Poetry](https://python-poetry.org/docs/#installation)
 
 ### Setup environment
