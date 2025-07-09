@@ -544,10 +544,14 @@ class ParameterSpace(SearchSpace):
                 type_str = "Categorical"
                 values_str = "[" + ", ".join(parameter.values) + "]"
                 transformation_str = " "
-                prior_probs = parameter._prior.probabilities
-                prior_str = (
-                    "[" + ",".join(map(lambda p: f"{p:3.2f}", prior_probs)) + "]"
-                )
+
+                if hasattr(parameter._prior, "probabilities"):
+                    prior_probs = parameter._prior.probabilities
+                    prior_str = (
+                        "[" + ",".join(map(lambda p: f"{p:3.2f}", prior_probs)) + "]"
+                    )
+                else:
+                    prior_str = ""
 
             elif isinstance(parameter, OrdinalParameter):
                 type_str = "Ordinal"
