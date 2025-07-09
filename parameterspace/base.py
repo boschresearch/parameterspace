@@ -1,4 +1,5 @@
 import abc
+from typing import Optional
 
 import numpy as np
 
@@ -6,7 +7,7 @@ import numpy as np
 class SearchSpace(abc.ABC):
     """Abstract base class for different search space implementations."""
 
-    def __init__(self, seed: int = None) -> None:
+    def __init__(self, seed: Optional[int] = None) -> None:
         """Initialize a search space with an optional seed."""
         self.seed(seed)
 

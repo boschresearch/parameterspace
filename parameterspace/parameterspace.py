@@ -30,7 +30,7 @@ class ParameterSpace(SearchSpace):
     checking configurations.
     """
 
-    def __init__(self, seed: int = None):
+    def __init__(self, seed: Optional[int] = None):
         super().__init__(seed=seed)
 
         self._parameters: dict = {}
@@ -61,7 +61,7 @@ class ParameterSpace(SearchSpace):
 
         return self_dict == other_dict
 
-    def seed(self, seed: Union[int, dict] = None) -> None:
+    def seed(self, seed: Union[int, dict, None] = None) -> None:
         """Reinitialize the random number generator.
 
         Args:
@@ -80,7 +80,7 @@ class ParameterSpace(SearchSpace):
     def add(
         self,
         parameter: Union[BaseParameter, ParameterSpace],
-        condition: Callable = None,
+        condition: Optional[Callable] = None,
     ):
         """Add a parameter that is only active if condition returns true when called.
 
@@ -289,7 +289,9 @@ class ParameterSpace(SearchSpace):
             ) from e
 
     def sample(
-        self, partial_configuration: dict = None, rng: np.random.Generator = None
+        self,
+        partial_configuration: Optional[dict] = None,
+        rng: Optional[np.random.Generator] = None,
     ) -> dict:
         """Sample a random configuration based on the priors.
 
