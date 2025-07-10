@@ -56,6 +56,23 @@ def test_simple_space():
     assert sample1 == sample2
 
 
+def test_add_parameters_by_method_chaining():
+    space = (
+        ParameterSpace()
+        .add(IntegerParameter("p1", (-5, 5)))
+        .add(ContinuousParameter("p2", (0, 5)))
+        .add(CategoricalParameter("p3", ["foo", "bar"]))
+        .add(OrdinalParameter("p4", ["cold", "warm", "hot"]))
+    )
+
+    names = space.get_parameter_names()
+
+    assert "p1" in names
+    assert "p2" in names
+    assert "p3" in names
+    assert "p4" in names
+
+
 def test_seeded_parameterspace():
     p1 = IntegerParameter("p1", (-5, 5))
     p2 = ContinuousParameter(

@@ -81,7 +81,7 @@ class ParameterSpace(SearchSpace):
         self,
         parameter: Union[BaseParameter, ParameterSpace],
         condition: Optional[Callable] = None,
-    ):
+    ) -> "ParameterSpace":
         """Add a parameter that is only active if condition returns true when called.
 
         Args:
@@ -113,6 +113,7 @@ class ParameterSpace(SearchSpace):
                 "parameter": parameter,
                 "condition": condition,
             }
+        return self
 
     def to_dict(self) -> dict:
         """
