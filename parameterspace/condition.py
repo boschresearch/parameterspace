@@ -6,7 +6,7 @@
 from __future__ import annotations
 
 import inspect
-from typing import Callable
+from typing import Callable, Optional
 
 from parameterspace import utils
 
@@ -15,7 +15,7 @@ class Condition:
     """Class that handels the logic of conditioning parameters on others in a
     ParameterSpace."""
 
-    def __init__(self, lambda_fn: Callable = None):
+    def __init__(self, lambda_fn: Optional[Callable] = None):
         """
         Args:
             lambda_fn: A callable whose signature contains valid names of other
@@ -66,7 +66,7 @@ class Condition:
         """
         return not bool(self.all_varnames)
 
-    def merge(self, other: Condition = None) -> Condition:
+    def merge(self, other: Optional[Condition] = None) -> Condition:
         """Concatenates two Conditions to allow for hierarchical spaces.
 
         Args:
