@@ -8,7 +8,9 @@ import json
 
 import numpy as np
 import pytest
-import scipy.special as sps
+
+# pylint: disable-next=no-name-in-module # FP with scipy 1.16.0
+from scipy.special import gamma
 
 from parameterspace.priors.base import BasePrior
 from parameterspace.priors.beta import Beta
@@ -48,7 +50,7 @@ def test_beta_prior_pdf_and_likelihood_within_bounds(num_samples=64):
     def _poor_mans_beta(x):
         return np.power(x, a - 1) * np.power(1 - x, b - 1)
 
-    Z = sps.gamma(a) * sps.gamma(b) / sps.gamma(a + b)
+    Z = gamma(a) * gamma(b) / gamma(a + b)
     pdfs = _poor_mans_beta(samples) / Z
 
     assert np.allclose(pdfs, p.pdf(samples))

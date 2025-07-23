@@ -8,7 +8,9 @@ import json
 
 import numpy as np
 import pytest
-import scipy.special as sps
+
+# pylint: disable-next=no-name-in-module  # FP with scipy 1.16.0
+from scipy.special import erf
 
 from parameterspace.priors.base import BasePrior
 from parameterspace.priors.truncated_normal import TruncatedNormal
@@ -48,9 +50,7 @@ def test_truncated_normal_prior_pdf_and_likelihood_within_bounds(num_samples=64)
         return np.exp(-np.power(x - mean, 2) / (2 * np.power(std, 2)))
 
     # compute pdfs by hand
-    Z = (
-        sps.erf((1 - mean) / std / np.sqrt(2)) - sps.erf((0 - mean) / std / np.sqrt(2))
-    ) / 2
+    Z = (erf((1 - mean) / std / np.sqrt(2)) - erf((0 - mean) / std / np.sqrt(2))) / 2
     pdfs = _poor_mans_normal(samples) / Z / np.sqrt(2 * np.pi) / std
 
     assert np.allclose(pdfs, p.pdf(samples))
